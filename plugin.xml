@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="nl.x-services.plugins.googleplus"
+        version="0.0.1">
+
+  <name>Google+</name>
+
+  <description>
+    Use your Google account to authenticate with the app.
+  </description>
+
+  <license>MIT</license>
+
+  <engines>
+    <engine name="cordova" version=">=3.0.0"/>
+  </engines>
+
+  <js-module src="www/GooglePlus.js" name="GooglePlus">
+    <clobbers target="window.plugins.googleplus" />
+  </js-module>
+
+  <!-- ios -->
+  <platform name="ios">
+
+    <config-file target="config.xml" parent="/*">
+      <feature name="GooglePlus">
+        <param name="ios-package" value="GooglePlus"/>
+        <param name="onload" value="true" />
+      </feature>
+      <!-- TODO limit to google oauth servers -->
+      <!--<access origin="https://something" />-->
+    </config-file>
+
+    <header-file src="src/ios/AppDelegate+GooglePlus.h"/>
+    <source-file src="src/ios/AppDelegate+GooglePlus.m"/>
+    <header-file src="src/ios/GooglePlus.h"/>
+    <source-file src="src/ios/GooglePlus.m"/>
+
+    <config-file target="*-Info.plist" parent="CFBundleURLTypes">
+      <array>
+        <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string>$PACKAGE_NAME</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>$PACKAGE_NAME</string>
+          </array>
+        </dict>
+      </array>
+    </config-file>
+
+    <!-- Google+ framework -->
+    <framework src="src/ios/sdk/GooglePlus.framework" custom="true" />
+    <framework src="src/ios/sdk/GoogleOpenSource.framework" custom="true" />
+
+    <!-- System frameworks -->
+    <framework src="AddressBook.framework" weak="true" />
+    <framework src="CoreMotion.framework" weak="true" />
+    <framework src="CoreText.framework" weak="true" />
+    <framework src="MediaPlayer.framework" weak="true" />
+    <framework src="Security.framework" weak="true" />
+    <framework src="SystemConfiguration.framework" weak="true" />
+
+  </platform>
+
+</plugin>
