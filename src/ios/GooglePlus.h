@@ -3,9 +3,12 @@
 
 @interface GooglePlus : CDVPlugin<GPPSignInDelegate>
 
+@property (nonatomic, copy) NSString* callbackId;
+
 - (void) login:(CDVInvokedUrlCommand*)command;
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command;
 - (void) logout:(CDVInvokedUrlCommand*)command;
+- (void) disconnect:(CDVInvokedUrlCommand*)command;
 - (void) share_unused:(CDVInvokedUrlCommand*)command;
 
 @end

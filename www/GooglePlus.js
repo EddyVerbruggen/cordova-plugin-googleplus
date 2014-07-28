@@ -13,6 +13,10 @@ GooglePlus.prototype.logout = function (successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "GooglePlus", "logout", []);
 };
 
+GooglePlus.prototype.disconnect = function (successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "GooglePlus", "disconnect", []);
+};
+
 GooglePlus.install = function () {
   if (!window.plugins) {
     window.plugins = {};
