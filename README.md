@@ -23,6 +23,12 @@ Android
 <img src="screenshots/Android1.png" width="235" height="400"/>&nbsp;
 <img src="screenshots/Android2.png" width="235" height="400"/>&nbsp;
 <img src="screenshots/Android3.png" width="235" height="400"/>
+
+ iOS
+ 
+<img src="screenshots/iOS1.png" width="235" height="417"/>&nbsp;
+<img src="screenshots/iOS2.png" width="235" height="417"/>&nbsp;
+<img src="screenshots/iOS3.png" width="235" height="417"/>&nbsp;
  
 ## 3. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
