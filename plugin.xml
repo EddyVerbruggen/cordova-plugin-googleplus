@@ -34,15 +34,6 @@
       <access origin="https://accounts.google.com/*" />
     </config-file>
 
-    <!--config-file target="AndroidManifest.xml" parent="application">
-      <meta-data
-          android:name="com.google.android.gms.version"
-          android:value="@integer/google_play_services_version" />
-    </config-file-->
-
-    <!-- Google Play Services -->
-    <!--<source-file src="src/android/libs/google-play-services-v18.jar" target-dir="libs" />-->
-
     <source-file src="src/android/GooglePlus.java" target-dir="src/nl/xservices/plugins"/>
   </platform>
 
