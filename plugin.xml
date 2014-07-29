@@ -20,9 +20,6 @@
     <clobbers target="window.plugins.googleplus" />
   </js-module>
 
-  <dependency id="com.google.playservices" />
-
-
   <!-- android -->
   <platform name="android">
 
@@ -34,14 +31,18 @@
       <access origin="https://accounts.google.com/*" />
     </config-file>
 
-    <!--config-file target="AndroidManifest.xml" parent="application">
+    <config-file target="AndroidManifest.xml" parent="application">
       <meta-data
           android:name="com.google.android.gms.version"
-          android:value="@integer/google_play_services_version" />
-    </config-file-->
+          android:value="5077000" />
+    </config-file>
+
+    <config-file target="AndroidManifest.xml" parent="/manifest">
+      <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    </config-file>
 
     <!-- Google Play Services -->
-    <!--<source-file src="src/android/libs/google-play-services-v18.jar" target-dir="libs" />-->
+    <source-file src="src/android/libs/google-play-services-v18.jar" target-dir="libs" />
 
     <source-file src="src/android/GooglePlus.java" target-dir="src/nl/xservices/plugins"/>
   </platform>
