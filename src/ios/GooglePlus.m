@@ -51,7 +51,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     [self writeJavascript:[pluginResult toErrorCallbackString:_callbackId]];
     return nil;
   }
-  
+
   GPPSignIn *signIn = [GPPSignIn sharedInstance];
   signIn.shouldFetchGooglePlusUser = YES;
   signIn.shouldFetchGoogleUserEmail = YES;
@@ -86,15 +86,17 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     [self writeJavascript:[pluginResult toErrorCallbackString:_callbackId]];
   } else {
     NSString *email = [GPPSignIn sharedInstance].userEmail;
+    NSString *token = [GPPSignIn sharedInstance].idToken;
     GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
     NSDictionary *result;
-    
+
     if (person == nil) {
       result = @{
                  @"email" : email
                  };
     } else {
       result = @{
+                 @"idToken"     : token,
                  @"email"       : email,
                  @"displayName" : person.displayName ?: [NSNull null],
                  @"gender"      : person.gender ?: [NSNull null],
@@ -116,7 +118,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector) {
   Method destinationMethod = class_getInstanceMethod(class, destinationSelector);
   Method sourceMethod = class_getInstanceMethod(class, sourceSelector);
-  
+
   // If the method doesn't exist, add it.  If it does exist, replace it with the given implementation.
   if (class_addMethod(class, destinationSelector, method_getImplementation(sourceMethod), method_getTypeEncoding(sourceMethod))) {
     class_replaceMethod(class, destinationSelector, method_getImplementation(destinationMethod), method_getTypeEncoding(destinationMethod));
