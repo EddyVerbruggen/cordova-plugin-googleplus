@@ -18,19 +18,22 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
            sourceApplication: (NSString *)sourceApplication
                   annotation: (id)annotation {
 
-  if (url && [url.path rangeOfString:@"oauth2callback"].location != NSNotFound) {
+  GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+  
+  if ([gp isSigningIn]) {
+    gp.isSigningIn = NO;
     return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
   } else {
     // call super
     return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
   }
 }
-
 @end
 
 @implementation GooglePlus
 
 - (void) login:(CDVInvokedUrlCommand*)command {
+  self.isSigningIn = YES;
   [[self getGooglePlusSignInObject:command] authenticate];
 }
 
