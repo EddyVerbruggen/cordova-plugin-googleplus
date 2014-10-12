@@ -1,4 +1,4 @@
-# Google+ Cordova / PhoneGap Plugin
+# Google+ Cordova/PhoneGap Plugin
 by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 
 ## 0. Index
@@ -28,7 +28,7 @@ Android
  
 <img src="screenshots/iOS1.png" width="235" height="417"/>&nbsp;
 <img src="screenshots/iOS2.png" width="235" height="417"/>&nbsp;
-<img src="screenshots/iOS3.png" width="235" height="417"/>
+<img src="screenshots/iOS3.png" width="235" height="417"/>&nbsp;
  
 ## 3. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
@@ -73,7 +73,7 @@ window.plugins.googleplus.login(
 );
 ```
 
-Note that if you're only targeting iOS you can pass `{}` for the first argument.
+Note that if you're only targeting Android you can pass `{}` for the first argument.
 
 The success callback (second argument) gets a JSON object with the following contents, with example data of my Google+ account:
 ```javascript
@@ -88,7 +88,7 @@ The success callback (second argument) gets a JSON object with the following con
 
 ### Try silent login
 When the user comes back to your app and you're not sure if he needs to log in,
-you can call `trySilentLogin` to try loggin him in.
+you can call `trySilentLogin` to try logging him in.
 
 If it succeeds you will get the same object as the `login` function gets,
 but if it fails it will not show the authentication dialog to the user.
