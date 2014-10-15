@@ -119,7 +119,8 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
           result.put("middleName", user.getName().getMiddleName());
           result.put("familyName", user.getName().getFamilyName());
           if (user.hasAgeRange()) {
-            result.put("ageRange", user.getAgeRange());
+            result.put("ageRangeMin", user.getAgeRange().getMin());
+            result.put("ageRangeMax", user.getAgeRange().getMax());
           }
           if (user.hasBirthday()) {
             result.put("birthday", user.getBirthday());

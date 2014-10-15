@@ -104,7 +104,10 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                  @"imageUrl"    : (person.image != nil && person.image.url != nil) ? person.image.url : [NSNull null],
                  @"givenName"   : (person.name != nil && person.name.givenName != nil) ? person.name.givenName : [NSNull null],
                  @"middleName"  : (person.name != nil && person.name.middleName != nil) ? person.name.middleName : [NSNull null],
-                 @"familyName"  : (person.name != nil && person.name.familyName != nil) ? person.name.familyName : [NSNull null]
+                 @"familyName"  : (person.name != nil && person.name.familyName != nil) ? person.name.familyName : [NSNull null],
+                 @"ageRangeMin" : person.ageRange && person.ageRange.min ? person.ageRange.min : [NSNull null],
+                 @"ageRangeMax" : person.ageRange && person.ageRange.max ? person.ageRange.max : [NSNull null],
+                 @"birthday"    : person.birthday ?: [NSNull null]
                  };
     }
     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
