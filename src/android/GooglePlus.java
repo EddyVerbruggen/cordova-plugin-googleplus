@@ -19,163 +19,171 @@ import org.json.JSONObject;
 
 public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, OnConnectionFailedListener {
 
-  public static final String ACTION_LOGIN = "login";
-  public static final String ACTION_TRY_SILENT_LOGIN = "trySilentLogin";
-  public static final String ACTION_LOGOUT = "logout";
-  public static final String ACTION_DISCONNECT = "disconnect";
+    public static final String ACTION_LOGIN = "login";
+    public static final String ACTION_TRY_SILENT_LOGIN = "trySilentLogin";
+    public static final String ACTION_LOGOUT = "logout";
+    public static final String ACTION_DISCONNECT = "disconnect";
 
-  // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
-  private GoogleApiClient mGoogleApiClient;
-  private CallbackContext savedCallbackContext;
-  private boolean trySilentLogin;
-  private boolean loggingOut;
+    // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
+    private GoogleApiClient mGoogleApiClient;
+    private CallbackContext savedCallbackContext;
+    private boolean trySilentLogin;
+    private boolean loggingOut;
 
-  @Override
-  public void initialize(CordovaInterface cordova, CordovaWebView webView) {
-    super.initialize(cordova, webView);
-    mGoogleApiClient = buildGoogleApiClient();
-  }
-
-  @Override
-  public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
-    this.savedCallbackContext = callbackContext;
-
-    if (ACTION_LOGIN.equals(action)) {
-      this.trySilentLogin = false;
-      mGoogleApiClient.connect();
-
-    } else if (ACTION_TRY_SILENT_LOGIN.equals(action)) {
-      this.trySilentLogin = true;
-      mGoogleApiClient.connect();
-
-    } else if (ACTION_LOGOUT.equals(action)) {
-      try {
-        Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-        mGoogleApiClient.disconnect();
-        // needed in onActivityResult when the connect method below comes back
-        loggingOut = true;
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
         mGoogleApiClient = buildGoogleApiClient();
-        mGoogleApiClient.connect();
-      } catch (IllegalStateException e) {
-        savedCallbackContext.success("logged out");
-      }
-
-    } else if (ACTION_DISCONNECT.equals(action)) {
-      disconnect();
     }
-    return true;
-  }
 
-  private void disconnect() {
-    try {
-      Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient)
-          .setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-              // mGoogleApiClient is now disconnected and access has been revoked.
-              // Don't care if it was disconnected already (status != success).
-              mGoogleApiClient = buildGoogleApiClient();
-              savedCallbackContext.success("disconnected");
+    @Override
+    public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+        this.savedCallbackContext = callbackContext;
+        
+        if (ACTION_LOGIN.equals(action)) {
+            this.trySilentLogin = false;
+            mGoogleApiClient.connect();
+
+        } else if (ACTION_TRY_SILENT_LOGIN.equals(action)) {
+            this.trySilentLogin = true;
+            mGoogleApiClient.connect();
+
+        } else if (ACTION_LOGOUT.equals(action)) {
+            try {
+                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                mGoogleApiClient.disconnect();
+                // needed in onActivityResult when the connect method below comes back
+                loggingOut = true;
+                mGoogleApiClient = buildGoogleApiClient();
+                mGoogleApiClient.connect();
+            } catch (IllegalStateException e) {
+                savedCallbackContext.success("logged out");
             }
-          });
-    } catch (IllegalStateException e) {
-      savedCallbackContext.success("disconnected");
-    }
-  }
 
-  private GoogleApiClient buildGoogleApiClient() {
-    return new GoogleApiClient.Builder(webView.getContext())
-        .addConnectionCallbacks(this)
-        .addOnConnectionFailedListener(this)
-        .addApi(Plus.API, Plus.PlusOptions.builder().build())
-        .addScope(Plus.SCOPE_PLUS_LOGIN)
-        .build();
-  }
-
-  /**
-   * onConnected is called when our Activity successfully connects to Google
-   * Play services.  onConnected indicates that an account was selected on the
-   * device, that the selected account has granted any requested permissions to
-   * our app and that we were able to establish a service connection to Google
-   * Play services.
-   */
-  @Override
-  public void onConnected(Bundle connectionHint) {
-    final String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-    final Person user = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-
-    final JSONObject result = new JSONObject();
-    try {
-      result.put("email", email);
-      // in case there was no internet connection, this may be null
-      if (user != null) {
-        result.put("displayName", user.getDisplayName());
-        result.put("gender", getGender(user.getGender()));
-        if (user.getImage() != null) {
-          result.put("imageUrl", user.getImage().getUrl());
+        } else if (ACTION_DISCONNECT.equals(action)) {
+            disconnect();
         }
-        if (user.getName() != null) {
-          result.put("givenName", user.getName().getGivenName());
-          result.put("middleName", user.getName().getMiddleName());
-          result.put("familyName", user.getName().getFamilyName());
+        return true;
+    }
+
+    private void disconnect() {
+        try {
+            Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient)
+                    .setResultCallback(new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            // mGoogleApiClient is now disconnected and access has been revoked.
+                            // Don't care if it was disconnected already (status != success).
+                            mGoogleApiClient = buildGoogleApiClient();
+                            savedCallbackContext.success("disconnected");
+                        }
+                    });
+        } catch (IllegalStateException e) {
+            savedCallbackContext.success("disconnected");
         }
-      }
-      savedCallbackContext.success(result);
-    } catch (JSONException e) {
-      this.savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
     }
-  }
 
-  // same as iOS values
-  private static String getGender(int gender) {
-    switch (gender) {
-      case 0:
-        return "male";
-      case 1:
-        return "female";
-      default:
-        return "other";
+    private GoogleApiClient buildGoogleApiClient() {
+        return new GoogleApiClient.Builder(webView.getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API, Plus.PlusOptions.builder().build())
+                .addScope(Plus.SCOPE_PLUS_LOGIN)
+                .build();
     }
-  }
 
-  @Override
-  public void onConnectionSuspended(int constantInClass_ConnectionCallbacks) {
-    this.savedCallbackContext.error("connection trouble, code: " + constantInClass_ConnectionCallbacks);
-  }
+    /**
+     * onConnected is called when our Activity successfully connects to Google
+     * Play services. onConnected indicates that an account was selected on the
+     * device, that the selected account has granted any requested permissions
+     * to our app and that we were able to establish a service connection to
+     * Google Play services.
+     */
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        final String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+        final Person user = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
 
-  /**
-   * onConnectionFailed is called when our Activity could not connect to Google Play services.
-   * onConnectionFailed indicates that the user needs to select an account, grant permissions or resolve an error in order to sign in.
-   */
-  @Override
-  public void onConnectionFailed(ConnectionResult result) {
-    if (result.getErrorCode() == ConnectionResult.SERVICE_MISSING) { // e.g. emulator without play services installed
-      this.savedCallbackContext.error("service not available");
-    } else if (loggingOut) {
-      loggingOut = false;
-      this.savedCallbackContext.success("logged out");
-    } else if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED && !trySilentLogin) {
-      final PendingIntent mSignInIntent = result.getResolution();
-      try {
-        // startIntentSenderForResult is started from the CordovaActivity,
-        // set callback to this plugin to make sure this.onActivityResult gets called afterwards
-        ((CordovaActivity) this.cordova.getActivity()).setActivityResultCallback(this);
-        this.cordova.getActivity().startIntentSenderForResult(mSignInIntent.getIntentSender(), 0, null, 0, 0, 0);
-      } catch (IntentSender.SendIntentException ignore) {
-        mGoogleApiClient.connect();
-      }
-    } else {
-      this.savedCallbackContext.error("no valid token");
+        final JSONObject result = new JSONObject();
+        try {
+            result.put("email", email);
+            // in case there was no internet connection, this may be null
+            if (user != null) {
+                result.put("displayName", user.getDisplayName());
+                result.put("gender", getGender(user.getGender()));
+                if (user.getImage() != null) {
+                    result.put("imageUrl", user.getImage().getUrl());
+                }
+                if (user.getName() != null) {
+                    result.put("givenName", user.getName().getGivenName());
+                    result.put("middleName", user.getName().getMiddleName());
+                    result.put("familyName", user.getName().getFamilyName());
+                    if (user.hasAgeRange()) {
+                        result.put("ageRange", user.getAgeRange());
+                    }
+                    if (user.hasBirthday()) {
+                        result.put("birthday", user.getBirthday());
+                    }
+                }
+            }
+            savedCallbackContext.success(result);
+        } catch (JSONException e) {
+            this.savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
+        }
     }
-  }
 
-  @Override
-  public void onActivityResult(int requestCode, final int resultCode, final Intent intent) {
-    super.onActivityResult(requestCode, resultCode, intent);
-    if (resultCode == Activity.RESULT_OK) {
-      mGoogleApiClient.connect();
-    } else {
-      this.savedCallbackContext.error("user cancelled");
+    // same as iOS values
+    private static String getGender(int gender) {
+        switch (gender) {
+            case 0:
+                return "male";
+            case 1:
+                return "female";
+            default:
+                return "other";
+        }
     }
-  }
+
+    @Override
+    public void onConnectionSuspended(int constantInClass_ConnectionCallbacks) {
+        this.savedCallbackContext.error("connection trouble, code: " + constantInClass_ConnectionCallbacks);
+    }
+
+    /**
+     * onConnectionFailed is called when our Activity could not connect to
+     * Google Play services. onConnectionFailed indicates that the user needs to
+     * select an account, grant permissions or resolve an error in order to sign
+     * in.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        if (result.getErrorCode() == ConnectionResult.SERVICE_MISSING) { // e.g. emulator without play services installed
+            this.savedCallbackContext.error("service not available");
+        } else if (loggingOut) {
+            loggingOut = false;
+            this.savedCallbackContext.success("logged out");
+        } else if (result.getErrorCode() == ConnectionResult.SIGN_IN_REQUIRED && !trySilentLogin) {
+            final PendingIntent mSignInIntent = result.getResolution();
+            try {
+                // startIntentSenderForResult is started from the CordovaActivity,
+                // set callback to this plugin to make sure this.onActivityResult gets called afterwards
+                ((CordovaActivity) this.cordova.getActivity()).setActivityResultCallback(this);
+                this.cordova.getActivity().startIntentSenderForResult(mSignInIntent.getIntentSender(), 0, null, 0, 0, 0);
+            } catch (IntentSender.SendIntentException ignore) {
+                mGoogleApiClient.connect();
+            }
+        } else {
+            this.savedCallbackContext.error("no valid token");
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, final Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_OK) {
+            mGoogleApiClient.connect();
+        } else {
+            this.savedCallbackContext.error("user cancelled");
+        }
+    }
 }
