@@ -85,8 +85,8 @@ The success callback (second argument) gets a JSON object with the following con
  obj.middleName   // null (or undefined, depending on the platform)
  obj.familyName   // 'Verbruggen'
  obj.birthday     // '1977-04-22'
- obj.ageRangeMin  // 21 (or null or a different number)
- obj.ageRangeMax  // null (or a number)
+ obj.ageRangeMin  // 21 (or null or undefined or a different number)
+ obj.ageRangeMax  // null (or undefined or a number)
 ```
 
 ### Try silent login
