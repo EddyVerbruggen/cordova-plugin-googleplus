@@ -78,6 +78,7 @@
     <framework src="AddressBook.framework" weak="true" />
     <framework src="CoreMotion.framework" weak="true" />
     <framework src="CoreText.framework" weak="true" />
+    <framework src="CoreLocation.framework" weak="true" />
     <framework src="MediaPlayer.framework" weak="true" />
     <framework src="Security.framework" weak="true" />
     <framework src="SystemConfiguration.framework" weak="true" />
