@@ -89,6 +89,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     [self writeJavascript:[pluginResult toErrorCallbackString:_callbackId]];
   } else {
     NSString *email = [GPPSignIn sharedInstance].userEmail;
+    NSString *token = [GPPSignIn sharedInstance].idToken;
     NSString *userId = [GPPSignIn sharedInstance].userID;
     GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
     NSDictionary *result;
@@ -100,6 +101,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     } else {
       result = @{
                  @"email"       : email,
+                 @"idToken"     : token,
                  @"userId"      : userId,
                  @"displayName" : person.displayName ?: [NSNull null],
                  @"gender"      : person.gender ?: [NSNull null],

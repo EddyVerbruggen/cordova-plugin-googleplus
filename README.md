@@ -78,6 +78,8 @@ Note that if you're only targeting Android you can pass `{}` for the first argum
 The success callback (second argument) gets a JSON object with the following contents, with example data of my Google+ account:
 ```javascript
  obj.email        // 'eddyverbruggen@gmail.com'
+ obj.userId       // user id
+ obj.idToken      // 'eyJdhzhJ...' (Android only, thanks #7)
  obj.displayName  // 'Eddy Verbruggen'
  obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
