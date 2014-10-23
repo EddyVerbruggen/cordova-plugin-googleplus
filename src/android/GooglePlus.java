@@ -109,6 +109,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
       result.put("email", email);
       // in case there was no internet connection, this may be null
       if (user != null) {
+        result.put("userId", user.getId());
         result.put("displayName", user.getDisplayName());
         result.put("gender", getGender(user.getGender()));
         if (user.getImage() != null) {
