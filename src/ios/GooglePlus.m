@@ -58,6 +58,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
   GPPSignIn *signIn = [GPPSignIn sharedInstance];
   signIn.shouldFetchGooglePlusUser = YES;
   signIn.shouldFetchGoogleUserEmail = YES;
+  signIn.shouldFetchGoogleUserID = YES;
   signIn.clientID = apiKey;
   signIn.scopes = @[kGTLAuthScopePlusLogin];
   signIn.attemptSSO = YES; // tries to use other installed Google apps
