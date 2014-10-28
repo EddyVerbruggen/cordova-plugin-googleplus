@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -13,6 +16,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+import java.io.IOException;
 import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -103,6 +107,8 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public void onConnected(Bundle connectionHint) {
     final String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
     final Person user = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+    
+
 
     final JSONObject result = new JSONObject();
     try {
@@ -132,10 +138,34 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
           }
         }
       }
-      savedCallbackContext.success(result);
+        
     } catch (JSONException e) {
       this.savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
     }
+    
+    
+    final CallbackContext cbContext = savedCallbackContext;
+    
+    cordova.getThreadPool().execute(new Runnable() {
+    	public void run() {
+    		String scopes = "oauth2:https://www.googleapis.com/auth/plus.login";
+	        String token = null;
+			try {
+        		token = GoogleAuthUtil.getToken(webView.getContext(), email, scopes);
+            } catch (Exception e) {
+                cbContext.error("Failed to retrieve token: " + e.getMessage());
+	        }
+	        
+	        try{
+		        result.put("idToken", token);
+	        } catch (JSONException e) {
+	        	cbContext.error("idToken parsing trouble, error: " + e.getMessage());
+	        }
+	        
+	        cbContext.success(result);
+        }
+    });
+    
   }
 
   // same as iOS values
