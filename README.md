@@ -53,6 +53,8 @@ To get your iOS API key, follow Step 1 of [this guide](https://developers.google
 ### Android
 To configure Android, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/android)
 
+Make sure you execute the `keytool` steps as well or authentication will fail.
+
 ## 5. Usage
 Check the [demo app](demo) to get you going quickly, or hurt yourself and follow these steps.
 
