@@ -65,6 +65,7 @@ Note that none of these methods should be called before [`deviceready`](http://d
 window.plugins.googleplus.login(
     {
       'iOSApiKey': '1234567890-abcdefghijklm74bfw.apps.googleusercontent.com'
+      // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
