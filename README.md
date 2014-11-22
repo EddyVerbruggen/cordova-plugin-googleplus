@@ -81,7 +81,7 @@ The success callback (second argument) gets a JSON object with the following con
 ```javascript
  obj.email        // 'eddyverbruggen@gmail.com'
  obj.userId       // user id
- obj.idToken      // 'eyJdhzhJ...' (Android only, thanks #7)
+ obj.idToken      // 'eyJdhzhJ...' (iOS only, thanks #7)
  obj.displayName  // 'Eddy Verbruggen'
  obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
