@@ -1,11 +1,20 @@
 package nl.xservices.plugins;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -13,6 +22,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
 import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +102,46 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
         .build();
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  private void resolveToken(final String email, final JSONObject result) {
+	  final Context context = this.cordova.getActivity().getApplicationContext();
+	  final String scope = "oauth2:" + Scopes.PLUS_LOGIN;
+
+	  AsyncTask task = new AsyncTask() {
+        @Override
+        protected Object doInBackground(Object... params) {
+          String scope = "oauth2:" + Scopes.PLUS_LOGIN;
+          try {
+            // Retrieve the oauth token
+            String token = GoogleAuthUtil.getToken(context, email, scope);
+            result.put("idToken", token);
+            savedCallbackContext.success(result);
+
+          } catch (UserRecoverableAuthException e) {
+            // This error is recoverable, so we could fix this
+            // by displaying the intent to the user.
+            savedCallbackContext.error("result recoverable error, error: " +
+                                       e.getMessage());
+
+          } catch (IOException e) {
+            savedCallbackContext.error("result IO error, error: " +
+                                       e.getMessage());
+
+          } catch (GoogleAuthException e) {
+            savedCallbackContext.error("result auth error, error: " +
+                                       e.getMessage());
+
+          } catch (JSONException e) {
+            savedCallbackContext.error("result auth error, error: " +
+                                       e.getMessage());
+
+          }
+          return null;
+        }
+      };
+		task.execute((Void) null);
+  }
+
   /**
    * onConnected is called when our Activity successfully connects to Google
    * Play services.  onConnected indicates that an account was selected on the
@@ -132,9 +182,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
           }
         }
       }
-      savedCallbackContext.success(result);
+      resolveToken(email, result);
     } catch (JSONException e) {
-      this.savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
+      savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
     }
   }
 
