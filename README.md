@@ -8,8 +8,9 @@ by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 3. [Installation (CLI / Plugman)](#3-installation-phonegap-cli--cordova-cli)
 4. [Google+ API setup](#4-google-api-setup)
 5. [Usage](#5-usage)
-6. [Changelog](#6-changelog)
-7. [License](#7-license)
+6. [Troubleshooting](#6-troubleshooting)
+7. [Changelog](#7-changelog)
+8. [License](#8-license)
 
 ## 1. Description
 
@@ -138,10 +139,17 @@ window.plugins.googleplus.disconnect(
 );
 ```
 
-## 6. CHANGELOG
+## 6. Troubleshooting
+- Q: After authentication I'm not redirected back to my app.
+- A: You probably changed the bundle id of your app after installing this plugin. Make sure that (on iOS) the `CFBundleURLTypes` bit in your `.plist` file is the same as the actual bundle id originating from `config.xml`.
+
+- Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
+- A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
+
+## 7. Changelog
 1.0.0: initial version supporting iOS and Android
 
-## 7. License
+## 8. License
 
 [The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.html)
 
