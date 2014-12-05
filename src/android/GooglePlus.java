@@ -1,11 +1,20 @@
 package nl.xservices.plugins;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
+
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -13,6 +22,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
+
 import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +33,12 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public static final String ACTION_TRY_SILENT_LOGIN = "trySilentLogin";
   public static final String ACTION_LOGOUT = "logout";
   public static final String ACTION_DISCONNECT = "disconnect";
+  public static final String ARGUMENT_ANDROID_KEY = "androidApiKey";
+  public static final String ARGUMENT_WEB_KEY = "webApiKey";
 
   // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
   private GoogleApiClient mGoogleApiClient;
+  private String apiKey, webKey;
   private CallbackContext savedCallbackContext;
   private boolean trySilentLogin;
   private boolean loggingOut;
@@ -39,6 +52,14 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   @Override
   public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
     this.savedCallbackContext = callbackContext;
+
+    if (args.optJSONObject(0) != null){
+      JSONObject obj = args.getJSONObject(0);
+      System.out.println(obj);
+      this.webKey = obj.optString(ARGUMENT_WEB_KEY, null);
+      this.apiKey = obj.optString(ARGUMENT_ANDROID_KEY, null);
+    }
+
 
     if (ACTION_LOGIN.equals(action)) {
       this.trySilentLogin = false;
@@ -57,8 +78,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
         mGoogleApiClient = buildGoogleApiClient();
         mGoogleApiClient.connect();
       } catch (IllegalStateException e) {
-        savedCallbackContext.success("logged out");
+
       }
+      savedCallbackContext.success("logged out");
 
     } else if (ACTION_DISCONNECT.equals(action)) {
       disconnect();
@@ -69,9 +91,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   private void disconnect() {
     try {
       Plus.AccountApi.revokeAccessAndDisconnect(mGoogleApiClient)
-          .setResultCallback(new ResultCallback<Status>() {
+        .setResultCallback(new ResultCallback<Status>() {
             @Override
-            public void onResult(Status status) {
+              public void onResult(Status status) {
               // mGoogleApiClient is now disconnected and access has been revoked.
               // Don't care if it was disconnected already (status != success).
               mGoogleApiClient = buildGoogleApiClient();
@@ -85,11 +107,63 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
 
   private GoogleApiClient buildGoogleApiClient() {
     return new GoogleApiClient.Builder(webView.getContext())
-        .addConnectionCallbacks(this)
-        .addOnConnectionFailedListener(this)
-        .addApi(Plus.API, Plus.PlusOptions.builder().build())
-        .addScope(Plus.SCOPE_PLUS_LOGIN)
-        .build();
+      .addConnectionCallbacks(this)
+      .addOnConnectionFailedListener(this)
+      .addApi(Plus.API, Plus.PlusOptions.builder().build())
+      .addScope(Plus.SCOPE_PLUS_LOGIN)
+      .addScope(Plus.SCOPE_PLUS_PROFILE)
+      .build();
+  }
+
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  private void resolveToken(final String email, final JSONObject result) {
+    final Context context = this.cordova.getActivity().getApplicationContext();
+
+    cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          String scope = null;
+          String token = null;
+
+          try {
+            if (GooglePlus.this.webKey != null){
+              // Retrieve server side tokens
+              scope = "audience:server:client_id:" + GooglePlus.this.webKey;
+              token = GoogleAuthUtil.getToken(context, email, scope);
+              result.put("idToken", token);
+            } else if (GooglePlus.this.apiKey != null) {
+              // Retrieve the oauth token with offline mode
+              scope = "oauth2:server:client_id:" + GooglePlus.this.apiKey;
+              scope += ":api_scope:" + Scopes.PLUS_LOGIN;
+              token = GoogleAuthUtil.getToken(context, email, scope);
+              result.put("oauthToken", token);
+            } else {
+              // Retrieve the oauth token with offline mode
+              scope = "oauth2:" + Scopes.PLUS_LOGIN;
+              token = GoogleAuthUtil.getToken(context, email, scope);
+              result.put("oauthToken", token);
+            }
+          }
+          catch (UserRecoverableAuthException userAuthEx) {
+            // Start the user recoverable action using the intent returned by
+            // getIntent()
+            cordova.getActivity().startActivityForResult(userAuthEx.getIntent(),
+                                                         Activity.RESULT_OK);
+            return;
+          }
+          catch (IOException e) {
+            savedCallbackContext.error("Failed to retrieve token: " + e.getMessage());
+            return;
+          } catch (GoogleAuthException e) {
+            savedCallbackContext.error("Failed to retrieve token: " + e.getMessage());
+            return;
+          } catch (JSONException e) {
+            savedCallbackContext.error("Failed to retrieve token: " + e.getMessage());
+            return;
+          }
+
+          savedCallbackContext.success(result);
+        }
+      });
   }
 
   /**
@@ -132,21 +206,21 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
           }
         }
       }
-      savedCallbackContext.success(result);
+      resolveToken(email, result);
     } catch (JSONException e) {
-      this.savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
+      savedCallbackContext.error("result parsing trouble, error: " + e.getMessage());
     }
   }
 
   // same as iOS values
   private static String getGender(int gender) {
     switch (gender) {
-      case 0:
-        return "male";
-      case 1:
-        return "female";
-      default:
-        return "other";
+    case 0:
+      return "male";
+    case 1:
+      return "female";
+    default:
+      return "other";
     }
   }
 
