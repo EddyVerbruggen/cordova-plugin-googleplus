@@ -41,7 +41,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
   // trySilentAuthentication doesn't call delegate when it fails, so handle it here
   if (![[self getGooglePlusSignInObject:command] trySilentAuthentication]) {
     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no valid token"];
-    [self writeJavascript:[pluginResult toErrorCallbackString:command.callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
   }
 }
 
@@ -51,7 +51,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
   NSString* apiKey = [options objectForKey:@"iOSApiKey"];
   if (apiKey == nil) {
     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
-    [self writeJavascript:[pluginResult toErrorCallbackString:_callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
     return nil;
   }
   
@@ -69,13 +69,13 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 - (void) logout:(CDVInvokedUrlCommand*)command {
   [[GPPSignIn sharedInstance] signOut];
   CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"logged out"];
-  [self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*)command {
   [[GPPSignIn sharedInstance] disconnect];
   CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"disconnected"];
-  [self writeJavascript:[pluginResult toSuccessCallbackString:command.callbackId]];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) share_unused:(CDVInvokedUrlCommand*)command {
@@ -87,7 +87,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                    error:(NSError *)error {
   if (error) {
     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-    [self writeJavascript:[pluginResult toErrorCallbackString:_callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
   } else {
     NSString *email = [GPPSignIn sharedInstance].userEmail;
     NSString *token = [GPPSignIn sharedInstance].idToken;
@@ -119,7 +119,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                  };
     }
     CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
-    [self writeJavascript:[pluginResult toSuccessCallbackString:_callbackId]];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
   }
 }
 
