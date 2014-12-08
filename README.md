@@ -83,7 +83,6 @@ The success callback (second argument) gets a JSON object with the following con
 ```javascript
  obj.email        // 'eddyverbruggen@gmail.com'
  obj.userId       // user id
- obj.idToken      // 'eyJdhzhJ...' (iOS only, thanks #7)
  obj.displayName  // 'Eddy Verbruggen'
  obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
@@ -93,6 +92,8 @@ The success callback (second argument) gets a JSON object with the following con
  obj.birthday     // '1977-04-22'
  obj.ageRangeMin  // 21 (or null or undefined or a different number)
  obj.ageRangeMax  // null (or undefined or a number)
+ obj.idToken
+ obj.oauthToken
 ```
 
 ### Try silent login
