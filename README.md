@@ -34,13 +34,15 @@ Android
 ## 3. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
 
+Using the Cordova CLI and the [Cordova Plugin Registry](http://plugins.cordova.io)
 ```
-$ phonegap local plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git
-```
-or, my personal preference
-```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git
+$ cordova plugin add nl.x-services.plugins.googleplus
 $ cordova prepare
+```
+
+Or using the phonegap CLI
+```
+$ phonegap local plugin add nl.x-services.plugins.googleplus
 ```
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.

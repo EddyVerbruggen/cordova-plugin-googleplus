@@ -10,7 +10,15 @@
     Use your Google account to authenticate with the app.
   </description>
 
+  <author>Eddy Verbruggen</author>
+
   <license>MIT</license>
+
+  <keywords>Google, Google+, GooglePlus, Google Plus, Google Login, Login, OAuth</keywords>
+
+  <repo>https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git</repo>
+
+  <issue>https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues</issue>
 
   <engines>
     <engine name="cordova" version=">=3.0.0"/>
