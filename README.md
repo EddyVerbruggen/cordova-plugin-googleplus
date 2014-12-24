@@ -12,6 +12,13 @@ by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 7. [Changelog](#7-changelog)
 8. [License](#8-license)
 
+
+## << --- Cordova Registry Warning [iOS]
+
+****Installing this plugin directly from Cordova Registry results in Xcode using a broken `GoogleOpenSource.framework` and `GooglePlus.framework`, this is because the current publish procedure to NPM breaks symlinks [CB-6092](https://issues.apache.org/jira/browse/CB-6092). Please install the plugin through a locally cloned copy or re-add the frameworks to Xcode after installation.****
+
+## ------------------------------------------ >>
+
 ## 1. Description
 
 This plugin allows you to log on with your Google account on iOS and Android.
