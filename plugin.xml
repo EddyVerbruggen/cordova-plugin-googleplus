@@ -2,13 +2,11 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="nl.x-services.plugins.googleplus"
-        version="1.0.7">
+        version="1.0.8">
 
   <name>Google+</name>
 
-  <description>
-    Use your Google account to authenticate with the app.
-  </description>
+  <description>Use your Google account to authenticate with the app.</description>
 
   <author>Eddy Verbruggen</author>
 
@@ -21,7 +19,7 @@
   <issue>https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues</issue>
 
   <engines>
-    <engine name="cordova" version=">=3.0.0"/>
+    <engine name="cordova" version=">=3.3.0"/>
   </engines>
 
   <js-module src="www/GooglePlus.js" name="GooglePlus">

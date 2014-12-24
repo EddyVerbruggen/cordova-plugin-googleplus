@@ -1,0 +1,28 @@
+{
+    "version": "1.0.8",
+    "name": "nl.x-services.plugins.googleplus",
+    "cordova_name": "Google+",
+    "description": "Use your Google account to authenticate with the app.",
+    "license": "MIT",
+    "repo": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git",
+    "issue": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues",
+    "keywords": [
+        "Google",
+        " Google+",
+        " GooglePlus",
+        " Google Plus",
+        " Google Login",
+        " Login",
+        " OAuth"
+    ],
+    "platforms": [
+        "android",
+        "ios"
+    ],
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.3.0"
+        }
+    ]
+}
