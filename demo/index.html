@@ -19,6 +19,8 @@
     <p class="event received">Device is Ready</p>
 
     <p id="feedback">not logged in</p>
+    <button onclick="isAvailable()">Available?</button>
+    <br/><br/>
     <button onclick="login()">Login with Google+</button>
     <br/><br/>
     <button onclick="trySilentLogin()">Try silent login with Google+</button>
@@ -34,6 +36,10 @@
 <script type="text/javascript">
 
   app.initialize();
+
+  function isAvailable() {
+    window.plugins.googleplus.isAvailable(function(avail) {alert(avail)});
+  }
 
   function login() {
     window.plugins.googleplus.login(

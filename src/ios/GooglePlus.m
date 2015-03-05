@@ -32,6 +32,14 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 
 @implementation GooglePlus
 
+// If this returns false, you better not call the login function because of likely app rejection by Apple,
+// see https://code.google.com/p/google-plus-platform/issues/detail?id=900
+- (void) isAvailable:(CDVInvokedUrlCommand*)command {
+  BOOL appInstalled = [[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:@"gplus://"]];
+  CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:appInstalled];
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 - (void) login:(CDVInvokedUrlCommand*)command {
   self.isSigningIn = YES;
   [[self getGooglePlusSignInObject:command] authenticate];

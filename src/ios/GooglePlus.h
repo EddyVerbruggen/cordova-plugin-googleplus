@@ -6,6 +6,7 @@
 @property (nonatomic, copy) NSString* callbackId;
 @property (nonatomic, assign) BOOL isSigningIn;
 
+- (void) isAvailable:(CDVInvokedUrlCommand*)command;
 - (void) login:(CDVInvokedUrlCommand*)command;
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command;
 - (void) logout:(CDVInvokedUrlCommand*)command;

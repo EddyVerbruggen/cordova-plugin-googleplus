@@ -1,6 +1,10 @@
 function GooglePlus() {
 }
 
+GooglePlus.prototype.isAvailable = function (callback) {
+  cordova.exec(callback, null, "GooglePlus", "isAvailable", []);
+};
+
 GooglePlus.prototype.login = function (options, successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "GooglePlus", "login", [options]);
 };

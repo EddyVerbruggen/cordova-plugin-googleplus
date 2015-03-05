@@ -70,6 +70,24 @@ Check the [demo app](demo) to get you going quickly, or hurt yourself and follow
 
 Note that none of these methods should be called before [`deviceready`](http://docs.phonegap.com/en/edge/cordova_events_events.md.html#deviceready) has fired.
 
+### isAvailable
+You'll want to check this before showing a 'Sign in with Google+' button.
+
+On iOS it will check whether or not the Google+ app is installed. If it's not and you invoke the `login` function,
+your app will redirect to Safari [which seems an app rejection reason these days](https://code.google.com/p/google-plus-platform/issues/detail?id=900).
+
+On Android it will check whether or not Google Play Services is available. It's more likely than not that it is.
+
+```javascript
+window.plugins.googleplus.isAvailable(
+    function (available) {
+      if (available) {
+        // show the Google+ sign-in button
+      }
+    }
+);
+```
+
 ### Login
 ```javascript
 window.plugins.googleplus.login(
@@ -157,7 +175,8 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 7. Changelog
-1.0.0: initial version supporting iOS and Android
+1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
+1.0.0: Initial version supporting iOS and Android
 
 ## 8. License
 
