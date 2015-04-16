@@ -248,7 +248,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
       try {
         // startIntentSenderForResult is started from the CordovaActivity,
         // set callback to this plugin to make sure this.onActivityResult gets called afterwards
-        ((CordovaActivity) this.cordova.getActivity()).setActivityResultCallback(this);
+        this.cordova.setActivityResultCallback(this);
         this.cordova.getActivity().startIntentSenderForResult(mSignInIntent.getIntentSender(), 0, null, 0, 0, 0);
       } catch (IntentSender.SendIntentException ignore) {
         mGoogleApiClient.connect();
