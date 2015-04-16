@@ -65,11 +65,11 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
 
     } else if (ACTION_LOGIN.equals(action)) {
       this.trySilentLogin = false;
-      mGoogleApiClient.connect();
+      mGoogleApiClient.reconnect();
 
     } else if (ACTION_TRY_SILENT_LOGIN.equals(action)) {
       this.trySilentLogin = true;
-      mGoogleApiClient.connect();
+      mGoogleApiClient.reconnect();
 
     } else if (ACTION_LOGOUT.equals(action)) {
       try {
@@ -124,8 +124,8 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
 
     cordova.getThreadPool().execute(new Runnable() {
       public void run() {
-        String scope = null;
-        String token = null;
+        String scope;
+        String token;
 
         try {
           if (GooglePlus.this.webKey != null){
