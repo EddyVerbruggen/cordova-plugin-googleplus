@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-googleplus"
+        id="nl.x-services.plugins.googleplus"
         version="1.1.2">
 
   <name>Google+</name>
