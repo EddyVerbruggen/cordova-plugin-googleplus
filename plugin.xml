@@ -29,7 +29,8 @@
   <!-- android -->
   <platform name="android">
 
-    <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" />
+    <framework src="com.google.android.gms:play-services-plus" />
+    <framework src="com.google.android.gms:play-services-identity" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="GooglePlus">
