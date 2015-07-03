@@ -44,13 +44,14 @@ This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordo
 
 Using the Cordova CLI and the [Cordova Plugin Registry](http://plugins.cordova.io)
 ```
-$ cordova plugin add nl.x-services.plugins.googleplus
+$ cordova plugin add cordova-plugin-googleplus
 $ cordova prepare
 ```
 
-Or using the phonegap CLI
+To fetch the latest version from GitHub, use
 ```
-$ phonegap local plugin add nl.x-services.plugins.googleplus
+$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus
+$ cordova prepare
 ```
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.

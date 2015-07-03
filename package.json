@@ -1,30 +1,31 @@
 {
   "name": "cordova-plugin-googleplus",
-  "version": "1.1.2",
+  "version": "2.0.0",
+  "author": "Eddy Verbruggen <eddyverbruggen@gmail.com>",
   "description": "Use your Google account to authenticate with the app.",
   "cordova": {
-    "id": "nl.x-services.plugins.googleplus",
+    "id": "cordova-plugin-googleplus",
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git"
+    "url": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git"
   },
   "keywords": [
-    "Google",
-    "Google+",
-    "GooglePlus",
-    "Google Plus",
-    "Google Login",
-    "Login",
-    "OAuth",
     "cordova",
+    "phonegap",
+    "google",
+    "plus",
+    "googleplus",
+    "google+",
+    "login",
+    "oauth",
     "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios"
+    "cordova-ios",
+    "cordova-android"
   ],
   "engines": [
     {
@@ -32,10 +33,9 @@
       "version": ">=3.3.0"
     }
   ],
-  "author": "Eddy Verbruggen",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues"
   },
-  "homepage": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus#readme"
+  "homepage": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus"
 }
