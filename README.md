@@ -59,7 +59,7 @@ GooglePlus.js is brought in automatically. There is no need to change or add any
 ## 4. Installation (PhoneGap Build)
 Add this to your config.xml:
 ```xml
-<gap:plugin name="nl.x-services.plugins.googleplus" source="plugins.cordova.io"/>
+<gap:plugin name="cordova-plugin-googleplus" source="npm"/>
 ```
 
 ## 5. Google+ API setup
