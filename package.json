@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-googleplus",
-  "version": "2.0.1",
+  "version": “3.0.0”,
   "author": "Eddy Verbruggen <eddyverbruggen@gmail.com>",
   "description": "Use your Google account to authenticate with the app.",
   "cordova": {

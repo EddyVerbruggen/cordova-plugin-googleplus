@@ -1,7 +1,9 @@
 #import <Cordova/CDVPlugin.h>
-#import <GooglePlus/GooglePlus.h>
+//#import <GooglePlus/GooglePlus.h>
+//#import <Foundation/Foundation.h>
+#import <GoogleSignIn/GoogleSignIn.h>
 
-@interface GooglePlus : CDVPlugin<GPPSignInDelegate>
+@interface GooglePlus : CDVPlugin<GIDSignInDelegate, GIDSignInUIDelegate>
 
 @property (nonatomic, copy) NSString* callbackId;
 @property (nonatomic, assign) BOOL isSigningIn;

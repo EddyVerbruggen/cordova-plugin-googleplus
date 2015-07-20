@@ -1,5 +1,6 @@
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import "AppDelegate.h"
+//#import "objc/runtime.h"
 #import "GooglePlus.h"
 
 // need to swap out a method, so swizzling it here
@@ -13,21 +14,41 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                 @selector(identity_application:openURL:sourceApplication:annotation:));
 }
 
+//- (BOOL)identity_application: (UIApplication *)application
+//                     openURL: (NSURL *)url
+//           sourceApplication: (NSString *)sourceApplication
+//                  annotation: (id)annotation {
+//
+//  GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+//  
+//  if ([gp isSigningIn]) {
+//    gp.isSigningIn = NO;
+//    return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
+//  } else {
+//    // call super
+//    return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+//  }
+//}
+
+/** Google Sign-In SDK
+ @date July 19, 2015
+ */
 - (BOOL)identity_application: (UIApplication *)application
                      openURL: (NSURL *)url
            sourceApplication: (NSString *)sourceApplication
                   annotation: (id)annotation {
-
-  GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
-  
-  if ([gp isSigningIn]) {
-    gp.isSigningIn = NO;
-    return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
-  } else {
-    // call super
-    return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
-  }
+    GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+    
+    if ([gp isSigningIn]) {
+        gp.isSigningIn = NO;
+        return [[GIDSignIn sharedInstance] handleURL:url sourceApplication:sourceApplication annotation:annotation];
+    } else {
+        // call super
+        return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+    }
 }
+
+
 @end
 
 @implementation GooglePlus
@@ -42,46 +63,82 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 
 - (void) login:(CDVInvokedUrlCommand*)command {
   self.isSigningIn = YES;
-  [[self getGooglePlusSignInObject:command] authenticate];
+//  [[self getGooglePlusSignInObject:command] authenticate];
+  [[self getGIDSignInObject:command] signIn];
 }
 
+/** Switch to Sign-In SDK.
+ @date July 19, 2015
+ */
+//- (void) trySilentLogin:(CDVInvokedUrlCommand*)command {
+//  // trySilentAuthentication doesn't call delegate when it fails, so handle it here
+//  if (![[self getGooglePlusSignInObject:command] trySilentAuthentication]) {
+//    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no valid token"];
+//    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+//  }
+//}
+
+/** Get Google Sign-In object
+ @date July 19, 2015
+ */
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command {
-  // trySilentAuthentication doesn't call delegate when it fails, so handle it here
-  if (![[self getGooglePlusSignInObject:command] trySilentAuthentication]) {
-    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"no valid token"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  }
+    self.isSigningIn = YES;
+    [[self getGIDSignInObject:command] signInSilently];
 }
 
-- (GPPSignIn*) getGooglePlusSignInObject:(CDVInvokedUrlCommand*)command {
-  _callbackId = command.callbackId;
-  NSDictionary* options = [command.arguments objectAtIndex:0];
-  NSString* apiKey = [options objectForKey:@"iOSApiKey"];
-  if (apiKey == nil) {
-    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
-    return nil;
-  }
-  
-  GPPSignIn *signIn = [GPPSignIn sharedInstance];
-  signIn.shouldFetchGooglePlusUser = YES;
-  signIn.shouldFetchGoogleUserEmail = YES;
-  signIn.shouldFetchGoogleUserID = YES;
-  signIn.clientID = apiKey;
-  signIn.scopes = @[kGTLAuthScopePlusLogin];
-  signIn.attemptSSO = YES; // tries to use other installed Google apps
-  signIn.delegate = self;
-  return signIn;
+/** Switch to Sign-In SDK
+ @date July 19, 2015
+ */
+//- (GPPSignIn*) getGooglePlusSignInObject:(CDVInvokedUrlCommand*)command {
+//  _callbackId = command.callbackId;
+//  NSDictionary* options = [command.arguments objectAtIndex:0];
+//  NSString* apiKey = [options objectForKey:@"iOSApiKey"];
+//  if (apiKey == nil) {
+//    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
+//    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
+//    return nil;
+//  }
+//  
+//  GPPSignIn *signIn = [GPPSignIn sharedInstance];
+//  signIn.shouldFetchGooglePlusUser = YES;
+//  signIn.shouldFetchGoogleUserEmail = YES;
+//  signIn.shouldFetchGoogleUserID = YES;
+//  signIn.clientID = apiKey;
+//  signIn.scopes = @[kGTLAuthScopePlusLogin];
+//  signIn.attemptSSO = YES; // tries to use other installed Google apps
+//  signIn.delegate = self;
+//  return signIn;
+//}
+
+/** Get Google Sign-In object
+ @date July 19, 2015
+ */
+- (GIDSignIn*) getGIDSignInObject:(CDVInvokedUrlCommand*)command {
+    _callbackId = command.callbackId;
+    NSDictionary* options = [command.arguments objectAtIndex:0];
+    NSString* apiKey = [options objectForKey:@"iOSApiKey"];
+    if (apiKey == nil) {
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
+        return nil;
+    }
+    
+    GIDSignIn *signIn = [GIDSignIn sharedInstance];
+    signIn.clientID = apiKey;
+    signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
+    signIn.uiDelegate = self;
+    signIn.delegate = self;
+    return signIn;
 }
 
 - (void) logout:(CDVInvokedUrlCommand*)command {
-  [[GPPSignIn sharedInstance] signOut];
+  [[GIDSignIn sharedInstance] signOut];
   CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"logged out"];
   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*)command {
-  [[GPPSignIn sharedInstance] disconnect];
+  [[GIDSignIn sharedInstance] disconnect];
   CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"disconnected"];
   [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -90,45 +147,101 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
   // for a rainy day.. see for a (limited) example https://github.com/vleango/GooglePlus-PhoneGap-iOS/blob/master/src/ios/GPlus.m
 }
 
-#pragma mark - GPPSignInDelegate
-- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth
-                   error:(NSError *)error {
-  if (error) {
-    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
-  } else {
-    NSString *email = [GPPSignIn sharedInstance].userEmail;
-    NSString *token = [GPPSignIn sharedInstance].idToken;
-    GTMOAuth2Authentication *auth = [[GPPSignIn sharedInstance] authentication];
-    NSString *accessToken = auth.accessToken;
-    NSString *userId = [GPPSignIn sharedInstance].userID;
-    GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
-    NSDictionary *result;
-    
-    if (person == nil) {
-      result = @{
-                 @"email" : email
-                 };
+
+/** Switch to Sign-In SDK
+ @date July 19, 2015
+ */
+//- (void)finishedWithAuth:(GTMOAuth2Authentication *)auth
+//                   error:(NSError *)error {
+//  if (error) {
+//    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+//    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
+//  } else {
+//    NSString *email = [GPPSignIn sharedInstance].userEmail;
+//    NSString *token = [GPPSignIn sharedInstance].idToken;
+//    GTMOAuth2Authentication *auth = [[GPPSignIn sharedInstance] authentication];
+//    NSString *accessToken = auth.accessToken;
+//    NSString *userId = [GPPSignIn sharedInstance].userID;
+//    GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
+//    NSDictionary *result;
+//    
+//    if (person == nil) {
+//      result = @{
+//                 @"email" : email
+//                 };
+//    } else {
+//      result = @{
+//                 @"email"       : email,
+//                 @"idToken"     : token,
+//                 @"oauthToken"  : accessToken,
+//                 @"userId"      : userId,
+//                 @"displayName" : person.displayName ?: [NSNull null],
+//                 @"gender"      : person.gender ?: [NSNull null],
+//                 @"imageUrl"    : (person.image != nil && person.image.url != nil) ? person.image.url : [NSNull null],
+//                 @"givenName"   : (person.name != nil && person.name.givenName != nil) ? person.name.givenName : [NSNull null],
+//                 @"middleName"  : (person.name != nil && person.name.middleName != nil) ? person.name.middleName : [NSNull null],
+//                 @"familyName"  : (person.name != nil && person.name.familyName != nil) ? person.name.familyName : [NSNull null],
+//                 @"ageRangeMin" : person.ageRange && person.ageRange.min ? person.ageRange.min : [NSNull null],
+//                 @"ageRangeMax" : person.ageRange && person.ageRange.max ? person.ageRange.max : [NSNull null],
+//                 @"birthday"    : person.birthday ?: [NSNull null]
+//                 };
+//    }
+//    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+//    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
+//  }
+//}
+
+#pragma mark - GIDSignInDelegate
+/** Google Sign-In SDK
+ @date July 19, 2015
+ */
+- (void)signIn:(GIDSignIn *)signIn
+didSignInForUser:(GIDGoogleUser *)user
+     withError:(NSError *)error {
+    if (error) {
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:error.localizedDescription];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
     } else {
-      result = @{
-                 @"email"       : email,
-                 @"idToken"     : token,
-                 @"oauthToken"  : accessToken,
-                 @"userId"      : userId,
-                 @"displayName" : person.displayName ?: [NSNull null],
-                 @"gender"      : person.gender ?: [NSNull null],
-                 @"imageUrl"    : (person.image != nil && person.image.url != nil) ? person.image.url : [NSNull null],
-                 @"givenName"   : (person.name != nil && person.name.givenName != nil) ? person.name.givenName : [NSNull null],
-                 @"middleName"  : (person.name != nil && person.name.middleName != nil) ? person.name.middleName : [NSNull null],
-                 @"familyName"  : (person.name != nil && person.name.familyName != nil) ? person.name.familyName : [NSNull null],
-                 @"ageRangeMin" : person.ageRange && person.ageRange.min ? person.ageRange.min : [NSNull null],
-                 @"ageRangeMax" : person.ageRange && person.ageRange.max ? person.ageRange.max : [NSNull null],
-                 @"birthday"    : person.birthday ?: [NSNull null]
-                 };
+        NSString *email = user.profile.email;
+        NSString *token = user.authentication.idToken;
+        NSString *accessToken = user.authentication.accessToken;
+        NSString *userId = user.userID;
+//        GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
+        NSDictionary *result = @{
+                       @"email"       : email,
+                       @"idToken"     : token,
+                       @"oauthToken"  : accessToken,
+                       @"userId"      : userId,
+                       @"displayName" : user.profile.name ?: [NSNull null]/*,
+                       @"gender"      : person.gender ?: [NSNull null],
+                       @"imageUrl"    : (person.image != nil && person.image.url != nil) ? person.image.url : [NSNull null],
+                       @"givenName"   : (person.name != nil && person.name.givenName != nil) ? person.name.givenName : [NSNull null],
+                       @"middleName"  : (person.name != nil && person.name.middleName != nil) ? person.name.middleName : [NSNull null],
+                       @"familyName"  : (person.name != nil && person.name.familyName != nil) ? person.name.familyName : [NSNull null],
+                       @"ageRangeMin" : person.ageRange && person.ageRange.min ? person.ageRange.min : [NSNull null],
+                       @"ageRangeMax" : person.ageRange && person.ageRange.max ? person.ageRange.max : [NSNull null],
+                       @"birthday"    : person.birthday ?: [NSNull null]*/
+                       };
+//        }
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
     }
-    CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:result];
-    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
-  }
+}
+
+/** Google Sign-In SDK
+ @date July 19, 2015
+ */
+- (void)signIn:(GIDSignIn *)signIn
+presentViewController:(UIViewController *)viewController {
+    [self.viewController presentViewController:viewController animated:YES completion:nil];
+}
+
+/** Google Sign-In SDK
+ @date July 19, 2015
+ */
+- (void)signIn:(GIDSignIn *)signIn
+dismissViewController:(UIViewController *)viewController {
+    [self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark Swizzling
