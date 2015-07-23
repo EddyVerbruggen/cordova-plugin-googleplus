@@ -34,10 +34,11 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public static final String ACTION_DISCONNECT = "disconnect";
   public static final String ARGUMENT_ANDROID_KEY = "androidApiKey";
   public static final String ARGUMENT_WEB_KEY = "webApiKey";
+  public static final String ARGUMENT_SCOPE = "scope";
 
   // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
   private GoogleApiClient mGoogleApiClient;
-  private String apiKey, webKey;
+  private String apiKey, webKey, scope;
   private CallbackContext savedCallbackContext;
   private boolean trySilentLogin;
   private boolean loggingOut;
@@ -57,6 +58,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
       System.out.println(obj);
       this.webKey = obj.optString(ARGUMENT_WEB_KEY, null);
       this.apiKey = obj.optString(ARGUMENT_ANDROID_KEY, null);
+      this.scope = obj.optString(ARGUMENT_SCOPE, null);
     }
 
     if (ACTION_IS_AVAILABLE.equals(action)) {
@@ -136,7 +138,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
           } else if (GooglePlus.this.apiKey != null) {
             // Retrieve the oauth token with offline mode
             scope = "oauth2:server:client_id:" + GooglePlus.this.apiKey;
-            scope += ":api_scope:" + Scopes.PLUS_LOGIN;
+            scope += ":api_scope:" + GooglePlus.this.scope;
             token = GoogleAuthUtil.getToken(context, email, scope);
             result.put("oauthToken", token);
           } else {
