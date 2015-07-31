@@ -36,6 +36,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public static final String ARGUMENT_WEB_KEY = "webApiKey";
   public static final String ARGUMENT_SCOPE = "scope";
 
+  private String recoveringEmail;
+  private JSONObject recoveringResult;
+
   // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
   private GoogleApiClient mGoogleApiClient;
   private String apiKey, webKey, scope;
@@ -123,6 +126,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private void resolveToken(final String email, final JSONObject result) {
     final Context context = this.cordova.getActivity().getApplicationContext();
+    final GooglePlus self = this;
 
     cordova.getThreadPool().execute(new Runnable() {
       public void run() {
@@ -151,8 +155,10 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
         catch (UserRecoverableAuthException userAuthEx) {
           // Start the user recoverable action using the intent returned by
           // getIntent()
-          cordova.getActivity().startActivityForResult(userAuthEx.getIntent(),
-              Activity.RESULT_OK);
+          self.cordova.setActivityResultCallback(self);
+          self.recoveringEmail = email;
+          self.recoveringResult = result;
+          cordova.getActivity().startActivityForResult(userAuthEx.getIntent(), 10);
           return;
         }
         catch (IOException e) {
@@ -263,7 +269,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   @Override
   public void onActivityResult(int requestCode, final int resultCode, final Intent intent) {
     super.onActivityResult(requestCode, resultCode, intent);
-    if (resultCode == Activity.RESULT_OK) {
+    if (mGoogleApiClient.isConnected() && resultCode == Activity.RESULT_OK) {
+      this.resolveToken(recoveringEmail, recoveringResult);
+    } else if (resultCode == Activity.RESULT_OK) {
       mGoogleApiClient.connect();
     } else {
       this.savedCallbackContext.error("user cancelled");
