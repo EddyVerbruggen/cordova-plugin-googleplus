@@ -117,6 +117,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     _callbackId = command.callbackId;
     NSDictionary* options = [command.arguments objectAtIndex:0];
     NSString* apiKey = [options objectForKey:@"iOSApiKey"];
+    NSString* scopesString = [options objectForKey:@"scopes"];
     if (apiKey == nil) {
         CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
@@ -128,6 +129,10 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
     signIn.uiDelegate = self;
     signIn.delegate = self;
+    if (scopesString != nil) {
+        NSArray* scopes = [scopesString componentsSeparatedByString:@" "];
+        [signIn setScopes:scopes];
+    }
     return signIn;
 }
 
