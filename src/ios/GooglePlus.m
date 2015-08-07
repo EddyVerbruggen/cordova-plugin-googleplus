@@ -212,7 +212,7 @@ didSignInForUser:(GIDGoogleUser *)user
         NSString *token = user.authentication.idToken;
         NSString *accessToken = user.authentication.accessToken;
         NSString *userId = user.userID;
-        NSString *serverAuthCode = user.serverAuthCode;
+        NSString *serverAuthCode = user.serverAuthCode != nil ? user.serverAuthCode : @"";
 //        GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
         NSDictionary *result = @{
                        @"email"       : email,
