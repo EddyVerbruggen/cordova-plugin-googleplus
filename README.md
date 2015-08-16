@@ -48,9 +48,9 @@ Make sure you execute the `keytool` steps as well or authentication will fail.
 ## 4. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
 
-Using the Cordova CLI and the [Cordova Plugin Registry](http://plugins.cordova.io)
+Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus)
 ```
-$ cordova plugin add cordova-plugin-googleplus
+$ cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
 
