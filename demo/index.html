@@ -43,9 +43,7 @@
 
   function login() {
     window.plugins.googleplus.login(
-        {
-          'iOSApiKey': '6535513912-uvpf249ak7avodois85tkjmh2lc2j952.apps.googleusercontent.com'
-        },
+        {},
         function (obj) {
           document.querySelector("#image").src = obj.imageUrl;
           document.querySelector("#image").style.visibility = 'visible';
@@ -59,9 +57,7 @@
 
   function trySilentLogin() {
     window.plugins.googleplus.trySilentLogin(
-        {
-          'iOSApiKey': '6535513912-uvpf249ak7avodois85tkjmh2lc2j952.apps.googleusercontent.com'
-        },
+        {},
         function (obj) {
           document.querySelector("#image").src = obj.imageUrl;
           document.querySelector("#image").style.visibility = 'visible';

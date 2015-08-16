@@ -5,20 +5,13 @@ by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 
 1. [Description](#1-description)
 2. [Screenshots](#2-screenshots)
-3. [Installation (CLI / Plugman)](#3-installation-phonegap-cli--cordova-cli)
-4. [Installation (PhoneGap Build)](#4-installation-phonegap-build)
-5. [Google+ API setup](#5-google-api-setup)
+3. [Google+ API setup](#3-google-api-setup)
+4. [Installation (CLI / Plugman)](#4-installation-phonegap-cli--cordova-cli)
+5. [Installation (PhoneGap Build)](#5-installation-phonegap-build)
 6. [Usage](#6-usage)
 7. [Troubleshooting](#7-troubleshooting)
 8. [Changelog](#8-changelog)
 9. [License](#9-license)
-
-
-## << --- Cordova Registry Warning [iOS]
-
-****Installing this plugin directly from Cordova Registry results in Xcode using a broken `GoogleOpenSource.framework` and `GooglePlus.framework`, this is because the current publish procedure to NPM breaks symlinks [CB-6092](https://issues.apache.org/jira/browse/CB-6092). Please install the plugin through a locally cloned copy or re-add the frameworks to Xcode after installation.****
-
-## ------------------------------------------ >>
 
 ## 1. Description
 
@@ -38,8 +31,21 @@ Android
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS1.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS2.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS3.png" width="235" height="417"/>&nbsp;
- 
-## 3. Installation (PhoneGap CLI / Cordova CLI)
+
+## 3. Google+ API setup
+To communicate with Google+ you need to do some tedious setup, sorry.
+
+### iOS
+To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/ios)
+[get a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
+This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
+
+### Android
+To configure Android, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/android)
+
+Make sure you execute the `keytool` steps as well or authentication will fail.
+
+## 4. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
 
 Using the Cordova CLI and the [Cordova Plugin Registry](http://plugins.cordova.io)
@@ -50,28 +56,19 @@ $ cordova prepare
 
 To fetch the latest version from GitHub, use
 ```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus
+$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
 
-## 4. Installation (PhoneGap Build)
+## 5. Installation (PhoneGap Build)
 Add this to your config.xml:
 ```xml
-<gap:plugin name="cordova-plugin-googleplus" source="npm"/>
+<gap:plugin name="cordova-plugin-googleplus" source="npm">
+  <param name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+</gap:plugin>
 ```
-
-## 5. Google+ API setup
-To communicate with Google+ you need to do some tedious setup, sorry.
-
-### iOS
-To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/ios)
-
-### Android
-To configure Android, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/android)
-
-Make sure you execute the `keytool` steps as well or authentication will fail.
 
 ## 6. Usage
 Check the [demo app](demo) to get you going quickly, or hurt yourself and follow these steps.
@@ -100,7 +97,7 @@ window.plugins.googleplus.isAvailable(
 ```javascript
 window.plugins.googleplus.login(
     {
-      'iOSApiKey': '1234567890-abcdefghijklm74bfw.apps.googleusercontent.com'
+      'scopes': '... ', // optional space-separated list of scopes, the default is sufficient for login and basic profile info
       // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
     function (obj) {
@@ -141,9 +138,7 @@ but if it fails it will not show the authentication dialog to the user.
 The code is exactly the same a `login`, except for the function name.
 ```javascript
 window.plugins.googleplus.trySilentLogin(
-    {
-      'iOSApiKey': '1234567890-abcdefghijklm74bfw.apps.googleusercontent.com'
-    },
+    {},
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
     },
@@ -183,6 +178,8 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
+4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
+3.0.0: Using Google Sign-In for iOS, instead of Google+.
 1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
 1.0.0: Initial version supporting iOS and Android
 

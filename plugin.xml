@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova.plugin.googleplus"
-        version="3.0.1">
+        id="cordova-plugin-googleplus"
+        version="4.0.0">
 
   <name>Google+</name>
 
@@ -29,8 +29,10 @@
   <!-- android -->
   <platform name="android">
 
-    <framework src="com.google.android.gms:play-services-plus:+" />
-    <framework src="com.google.android.gms:play-services-identity:+" />
+    <!-- these give a lot of peeps trouble, esp on build.phonegap.com, so not using them -->
+    <!--<framework src="com.google.android.gms:play-services-plus:+" />-->
+    <!--<framework src="com.google.android.gms:play-services-identity:+" />-->
+    <dependency id="cordova-plugin-googleplayservices" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="GooglePlus">
@@ -62,7 +64,7 @@
     <header-file src="src/ios/GooglePlus.h"/>
     <source-file src="src/ios/GooglePlus.m"/>
 
-    <preference name='REVERSED_CLIENT_ID'/>
+    <preference name="REVERSED_CLIENT_ID"/>
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>

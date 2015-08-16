@@ -116,25 +116,54 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 - (GIDSignIn*) getGIDSignInObject:(CDVInvokedUrlCommand*)command {
     _callbackId = command.callbackId;
     NSDictionary* options = [command.arguments objectAtIndex:0];
-    NSString* apiKey = [options objectForKey:@"iOSApiKey"];
-    NSString* serverApiKey = [options objectForKey:@"androidApiKey"];
-    NSString* scopesString = [options objectForKey:@"scopes"];
-    if (apiKey == nil) {
-        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"iOSApiKey not set"];
+    NSString *reversedClientId = [self getreversedClientId];
+  
+    if (reversedClientId == nil) {
+        CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Could not find REVERSED_CLIENT_ID url scheme in app .plist"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
         return nil;
     }
-    
+  
+    NSString *clientId = [self reverseUrlScheme:reversedClientId];
+  
+    NSString* scopesString = [options objectForKey:@"scopes"];
+  
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
-    signIn.clientID = apiKey;
+    signIn.clientID = clientId;
     signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
     signIn.uiDelegate = self;
     signIn.delegate = self;
+
+    // default scopes are email and profile
     if (scopesString != nil) {
         NSArray* scopes = [scopesString componentsSeparatedByString:@" "];
         [signIn setScopes:scopes];
     }
     return signIn;
+}
+
+- (NSString*) reverseUrlScheme:(NSString*)scheme {
+  NSArray* originalArray = [scheme componentsSeparatedByString:@"."];
+  NSArray* reversedArray = [[originalArray reverseObjectEnumerator] allObjects];
+  NSString* reversedString = [reversedArray componentsJoinedByString:@"."];
+  return reversedString;
+}
+
+- (NSString*) getreversedClientId {
+  NSArray* URLTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
+  
+  if (URLTypes != nil) {
+    for (NSDictionary* dict in URLTypes) {
+      NSString *urlName = [dict objectForKey:@"CFBundleURLName"];
+      if ([urlName isEqualToString:@"REVERSED_CLIENT_ID"]) {
+        NSArray* URLSchemes = [dict objectForKey:@"CFBundleURLSchemes"];
+        if (URLSchemes != nil) {
+          return [URLSchemes objectAtIndex:0];
+        }
+      }
+    }
+  }
+  return nil;
 }
 
 - (void) logout:(CDVInvokedUrlCommand*)command {
