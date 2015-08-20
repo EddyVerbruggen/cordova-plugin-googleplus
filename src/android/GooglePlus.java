@@ -68,13 +68,15 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
     this.savedCallbackContext = callbackContext;
 
-    if (args.optJSONObject(0) != null){
+    if (args.optJSONObject(0) != null) {
       JSONObject obj = args.getJSONObject(0);
-      System.out.println(obj);
       this.webKey = obj.optString(ARGUMENT_WEB_KEY, null);
       this.apiKey = obj.optString(ARGUMENT_ANDROID_KEY, null);
       this.setupScopes(obj.optString(ARGUMENT_SCOPES, null));
+      // possible scope change, so force a rebuild of the client
+      this.mGoogleApiClient = null;
     }
+
     //It's important that we build the GoogleApiClient after setting up scopes so we know which scopes to request when setting up the google services api client.
     buildGoogleApiClient();
 
@@ -156,9 +158,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
     }
 
     GoogleApiClient.Builder builder = new GoogleApiClient.Builder(webView.getContext())
-      .addConnectionCallbacks(this)
-      .addOnConnectionFailedListener(this)
-      .addApi(Plus.API, Plus.PlusOptions.builder().build());
+        .addConnectionCallbacks(this)
+        .addOnConnectionFailedListener(this)
+        .addApi(Plus.API, Plus.PlusOptions.builder().build());
 
     for (Scope scope : this.scopes) {
       builder.addScope(scope);
@@ -168,7 +170,6 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
     return this.mGoogleApiClient;
   }
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
   private void resolveToken(final String email, final JSONObject result) {
     final Context context = this.cordova.getActivity().getApplicationContext();
 
