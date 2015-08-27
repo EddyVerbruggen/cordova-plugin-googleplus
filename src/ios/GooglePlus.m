@@ -247,6 +247,7 @@ didSignInForUser:(GIDGoogleUser *)user
                        @"email"       : email,
                        @"idToken"     : token,
                        @"oauthToken"  : serverAuthCode,
+                       @"accessToken" : accessToken,
                        @"userId"      : userId,
                        @"displayName" : user.profile.name ?: [NSNull null]/*,
                        @"gender"      : person.gender ?: [NSNull null],
