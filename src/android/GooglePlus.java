@@ -184,13 +184,15 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
             scope = "audience:server:client_id:" + GooglePlus.this.webKey;
             token = GoogleAuthUtil.getToken(context, email, scope);
             result.put("idToken", token);
-          } else if (GooglePlus.this.apiKey != null) {
+          }
+          if (GooglePlus.this.apiKey != null) {
             // Retrieve the oauth token with offline mode
             scope = "oauth2:server:client_id:" + GooglePlus.this.apiKey;
             scope += ":api_scope:" + GooglePlus.this.scopesString;
             token = GoogleAuthUtil.getToken(context, email, scope);
             result.put("oauthToken", token);
-          } else {
+          }
+          if (GooglePlus.this.webKey == null && GooglePlus.this.apiKey == null) {
             // Retrieve the oauth token with offline mode
             scope = "oauth2:" + Scopes.PLUS_LOGIN;
             token = GoogleAuthUtil.getToken(context, email, scope);
