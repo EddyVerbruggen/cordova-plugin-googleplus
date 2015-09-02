@@ -36,7 +36,7 @@ Android
 To communicate with Google+ you need to do some tedious setup, sorry.
 
 ### iOS
-To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/ios)
+To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/mobile/ios/getting-started)
 [get a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
 
