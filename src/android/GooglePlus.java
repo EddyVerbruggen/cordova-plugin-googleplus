@@ -38,6 +38,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public static final String ARGUMENT_ANDROID_KEY = "androidApiKey";
   public static final String ARGUMENT_WEB_KEY = "webApiKey";
   public static final String ARGUMENT_SCOPES = "scopes";
+  public static final String ARGUMENT_OFFLINE_KEY = "offline";
 
   /**
    * Email for the google account that is being logged in
@@ -58,6 +59,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   private CallbackContext savedCallbackContext;
   private boolean trySilentLogin;
   private boolean loggingOut;
+  private boolean requestOfflineToken;
 
   @Override
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -72,6 +74,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
       JSONObject obj = args.getJSONObject(0);
       this.webKey = obj.optString(ARGUMENT_WEB_KEY, null);
       this.apiKey = obj.optString(ARGUMENT_ANDROID_KEY, null);
+      this.requestOfflineToken = obj.optBoolean(ARGUMENT_OFFLINE_KEY, false);
       this.setupScopes(obj.optString(ARGUMENT_SCOPES, null));
       // possible scope change, so force a rebuild of the client
       this.mGoogleApiClient = null;
@@ -185,14 +188,15 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
             token = GoogleAuthUtil.getToken(context, email, scope);
             result.put("idToken", token);
           }
+
+          // if API key or offline flag is set, then also get the OAuth access token
           if (GooglePlus.this.apiKey != null) {
             // Retrieve the oauth token with offline mode
             scope = "oauth2:server:client_id:" + GooglePlus.this.apiKey;
             scope += ":api_scope:" + GooglePlus.this.scopesString;
             token = GoogleAuthUtil.getToken(context, email, scope);
             result.put("oauthToken", token);
-          }
-          if (GooglePlus.this.webKey == null && GooglePlus.this.apiKey == null) {
+          } else if(GooglePlus.this.requestOfflineToken) {
             // Retrieve the oauth token with offline mode
             scope = "oauth2:" + Scopes.PLUS_LOGIN;
             token = GoogleAuthUtil.getToken(context, email, scope);
