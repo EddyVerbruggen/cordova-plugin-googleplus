@@ -27,7 +27,7 @@ Android
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/Android3.png" width="235" height="400"/>
 
  iOS
- 
+
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS1.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS2.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS3.png" width="235" height="417"/>&nbsp;
@@ -98,6 +98,8 @@ window.plugins.googleplus.isAvailable(
 window.plugins.googleplus.login(
     {
       'scopes': '... ', // optional space-separated list of scopes, the default is sufficient for login and basic profile info
+      'webApiKey': 'api of web app', // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services
+      'offline': true, // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
       // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
     function (obj) {
@@ -138,7 +140,10 @@ but if it fails it will not show the authentication dialog to the user.
 The code is exactly the same a `login`, except for the function name.
 ```javascript
 window.plugins.googleplus.trySilentLogin(
-    {},
+    {
+      'webApiKey': 'api of web app', // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services
+      'offline': true // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+    },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
     },
