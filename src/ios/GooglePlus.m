@@ -127,9 +127,15 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     NSString *clientId = [self reverseUrlScheme:reversedClientId];
   
     NSString* scopesString = [options objectForKey:@"scopes"];
-  
+    NSString* serverClientId = [options objectForKey:@"webApiKey"];
+
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
     signIn.clientID = clientId;
+
+    if (serverClientId != nil) {
+      signIn.serverClientID = serverClientId;
+    }
+
     signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
     signIn.uiDelegate = self;
     signIn.delegate = self;
