@@ -27,7 +27,7 @@ Android
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/Android3.png" width="235" height="400"/>
 
  iOS
- 
+
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS1.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS2.png" width="235" height="417"/>&nbsp;
 <img src="https://raw.githubusercontent.com/EddyVerbruggen/cordova-plugin-googleplus/master/screenshots/iOS3.png" width="235" height="417"/>&nbsp;
@@ -36,7 +36,7 @@ Android
 To communicate with Google+ you need to do some tedious setup, sorry.
 
 ### iOS
-To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/ios)
+To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/mobile/ios/getting-started)
 [get a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
 
@@ -99,6 +99,7 @@ window.plugins.googleplus.login(
     {
       'scopes': '... ', // optional space-separated list of scopes, the default is sufficient for login and basic profile info
       'offline': true, // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+      'webApiKey': 'api of web app', // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services
       // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
     function (obj) {
@@ -140,7 +141,8 @@ The code is exactly the same a `login`, except for the function name.
 ```javascript
 window.plugins.googleplus.trySilentLogin(
     {
-      'offline': true // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+      'offline': true, // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+      'webApiKey': 'api of web app' // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services 
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
