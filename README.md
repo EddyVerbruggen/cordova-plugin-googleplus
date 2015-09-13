@@ -118,16 +118,18 @@ The success callback (second argument) gets a JSON object with the following con
  obj.email        // 'eddyverbruggen@gmail.com'
  obj.userId       // user id
  obj.displayName  // 'Eddy Verbruggen'
- obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
+ obj.idToken
+ obj.oauthToken
+
+ // these are only available on Android at the moment
+ obj.gender       // 'male' (other options are 'female' and 'unknown'
  obj.givenName    // 'Eddy'
  obj.middleName   // null (or undefined, depending on the platform)
  obj.familyName   // 'Verbruggen'
  obj.birthday     // '1977-04-22'
  obj.ageRangeMin  // 21 (or null or undefined or a different number)
  obj.ageRangeMax  // null (or undefined or a number)
- obj.idToken
- obj.oauthToken
 ```
 
 ### Try silent login
@@ -183,6 +185,7 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
+4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google SignIn framework. Re-added imageUrl to the result of SignIn on iOS.
 4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.
 4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
 3.0.0: Using Google Sign-In for iOS, instead of Google+.
