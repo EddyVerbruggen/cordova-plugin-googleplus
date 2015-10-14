@@ -342,6 +342,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   @Override
   public void onActivityResult(int requestCode, final int resultCode, final Intent intent) {
     super.onActivityResult(requestCode, resultCode, intent);
+    if (mGoogleApiClient == null) {
+      buildGoogleApiClient();
+    }
     if (!mGoogleApiClient.isConnected() && resultCode == Activity.RESULT_OK) {
       mGoogleApiClient.connect();
     } else if (resultCode == Activity.RESULT_OK) {
