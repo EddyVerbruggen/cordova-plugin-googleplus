@@ -63,8 +63,16 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 }
 
 - (void) login:(CDVInvokedUrlCommand*)command {
-  self.isSigningIn = YES;
-//  [[self getGooglePlusSignInObject:command] authenticate];
+    BOOL appInstalled = [[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:@"com-google-gidconsent-google://"]];
+    if (appInstalled)
+    {
+        self.isSigningIn = YES;
+    }
+    else
+    {
+        self.isSigningIn = NO;   
+    }
+  //  [[self getGooglePlusSignInObject:command] authenticate];
   [[self getGIDSignInObject:command] signIn];
 }
 
@@ -83,7 +91,15 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
  @date July 19, 2015
  */
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command {
-    self.isSigningIn = YES;
+    BOOL appInstalled = [[UIApplication sharedApplication] canOpenURL: [NSURL URLWithString:@"com-google-gidconsent-google://"]];
+    if (appInstalled)
+    {
+        self.isSigningIn = YES;
+    }
+    else
+    {
+        self.isSigningIn = NO;   
+    }
     [[self getGIDSignInObject:command] signInSilently];
 }
 
