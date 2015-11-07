@@ -185,6 +185,7 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
+4.0.4: Using framework tags again for Android.
 4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google SignIn framework. Re-added imageUrl to the result of SignIn on iOS.
 4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.
 4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
