@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.Manifest;
 import android.os.Bundle;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
@@ -39,6 +41,8 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   public static final String ARGUMENT_WEB_KEY = "webApiKey";
   public static final String ARGUMENT_SCOPES = "scopes";
   public static final String ARGUMENT_OFFLINE_KEY = "offline";
+
+  private static final int REQUEST_GET_ACCOUNTS = 1;
 
   /**
    * Email for the google account that is being logged in
@@ -229,6 +233,24 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
     });
   }
 
+  private Bundle cacheBundle;
+
+  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
+  {
+    if (requestCode != REQUEST_GET_ACCOUNTS) {
+      return;
+    }
+
+    for (int i = 0; i < permissions.length; i++) {
+      if (permissions[i].equals(Manifest.permission.GET_ACCOUNTS) && grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+        onConnected(cacheBundle);
+        return;
+      }
+    }
+
+    savedCallbackContext.error("Must allow Get Account permissions.");
+  }
+
   /**
    * onConnected is called when our Activity successfully connects to Google
    * Play services.  onConnected indicates that an account was selected on the
@@ -239,6 +261,13 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
   @Override
   public void onConnected(Bundle connectionHint) {
     final Person user = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
+
+    if (!cordova.hasPermission(Manifest.permission.GET_ACCOUNTS)) {
+      cacheBundle = connectionHint;
+      cordova.requestPermission(this, REQUEST_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
+      return;
+    }
+
     this.email = Plus.AccountApi.getAccountName(mGoogleApiClient);
     this.result = new JSONObject();
 
