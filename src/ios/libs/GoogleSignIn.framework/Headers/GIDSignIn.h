@@ -136,17 +136,23 @@ typedef NS_ENUM(NSInteger, GIDSignInErrorCode) {
 @property(nonatomic, copy) NSString *language;
 
 // The client ID of the home web server.  This will be returned as the |audience| property of the
-// JWT ID token.  For more info on the ID token:
-// https://developers.google.com/accounts/docs/OAuth2Login#obtainuserinfo
+// OpenID Connect ID token.  For more info on the ID token:
+// https://developers.google.com/identity/sign-in/ios/backend-auth
 //
 // This property is optional. If you set it, set it before calling |signIn|.
 @property(nonatomic, copy) NSString *serverClientID;
 
 // The OpenID2 realm of the home web server. This allows Google to include the user's OpenID
-// Identifier in the JWT ID token.
+// Identifier in the OpenID Connect ID token.
 //
 // This property is optional. If you set it, set it before calling |signIn|.
 @property(nonatomic, copy) NSString *openIDRealm;
+
+// The Google Apps domain to which users must belong to sign in.  To verify, check |GIDGoogleUser|'s
+// |hostedDomain| property.
+//
+// This property is optional. If you set it, set it before calling |signIn|.
+@property(nonatomic, copy) NSString *hostedDomain;
 
 // Returns a shared |GIDSignIn| instance.
 + (GIDSignIn *)sharedInstance;
@@ -178,7 +184,10 @@ typedef NS_ENUM(NSInteger, GIDSignInErrorCode) {
 // succeeds, the OAuth 2.0 token is also removed from keychain.
 - (void)disconnect;
 
-// Checks if a Google app to handle sign in requests is installed on the user's device.
-- (void)checkGoogleSignInAppInstalled:(void (^)(BOOL isInstalled))callback;
+// DEPRECATED: this method always calls back with |NO| on iOS 9 or above. Do not use this method.
+// Checks if a Google app to handle sign in requests is installed on the user's device on iOS 8 or
+// below.
+- (void)checkGoogleSignInAppInstalled:(void (^)(BOOL isInstalled))callback
+    DEPRECATED_MSG_ATTRIBUTE("This method always calls back with |NO| on iOS 9 or above.");
 
 @end

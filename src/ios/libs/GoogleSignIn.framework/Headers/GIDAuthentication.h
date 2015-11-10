@@ -10,7 +10,19 @@
 
 #import <Foundation/Foundation.h>
 
-// The callback block that takes an access token or an error if attempt to refresh was unsuccessful.
+@protocol GTMFetcherAuthorizationProtocol;
+@class GIDAuthentication;
+
+// @relates GIDAuthentication
+//
+// The callback block that takes a GIDAuthentication, or an error if attempt to refresh was
+// unsuccessful.
+typedef void (^GIDAuthenticationHandler)(GIDAuthentication *authentication, NSError *error);
+
+// @relates GIDAuthentication
+//
+// The callback block that takes an access token, or an error if attempt to refresh was
+// unsuccessful.
 typedef void (^GIDAccessTokenHandler)(NSString *accessToken, NSError *error);
 
 // This class represents the OAuth 2.0 entities needed for sign-in.
@@ -28,16 +40,30 @@ typedef void (^GIDAccessTokenHandler)(NSString *accessToken, NSError *error);
 // The OAuth2 refresh token to exchange for new access tokens.
 @property(nonatomic, readonly) NSString *refreshToken;
 
-// A JSON Web Token identifying the user. Send this token to your server to authenticate the user on
-// the server. For more information on JWTs, see
-// https://developers.google.com/accounts/docs/OAuth2Login#obtainuserinfo
+// An OpenID Connect ID token that identifies the user. Send this token to your server to
+// authenticate the user there. For more information on this topic, see
+// https://developers.google.com/identity/sign-in/ios/backend-auth
 @property(nonatomic, readonly) NSString *idToken;
 
-// Gets the access token, which may be a new one from the refresh token if the original has already
-// expired or is about to expire.
-- (void)getAccessTokenWithHandler:(GIDAccessTokenHandler)handler;
+// The estimated expiration date of the ID token.
+@property(nonatomic, readonly) NSDate *idTokenExpirationDate;
 
-// Refreshes the access token with the refresh token.
-- (void)refreshAccessTokenWithHandler:(GIDAccessTokenHandler)handler;
+// Gets a new authorizer for GTLService, GTMSessionFetcher, or GTMHTTPFetcher.
+- (id<GTMFetcherAuthorizationProtocol>)fetcherAuthorizer;
+
+// Optionally refreshs the access token and the id token from the refresh token if the originals
+// have already expired or are about to expire.
+- (void)getTokensWithHandler:(GIDAuthenticationHandler)handler;
+
+// Refreshes the access token and the id token with the refresh token.
+- (void)refreshTokensWithHandler:(GIDAuthenticationHandler)handler;
+
+// DEPRECATED: please call |getTokensWithHandler:| instead.
+- (void)getAccessTokenWithHandler:(GIDAccessTokenHandler)handler
+    DEPRECATED_MSG_ATTRIBUTE("Please use |getTokensWithHandler:|.");
+
+// DEPRECATED: please call |refreshTokensWithHandler:| instead.
+- (void)refreshAccessTokenWithHandler:(GIDAccessTokenHandler)handler
+    DEPRECATED_MSG_ATTRIBUTE("Please use |refreshTokensWithHandler:|.");
 
 @end
