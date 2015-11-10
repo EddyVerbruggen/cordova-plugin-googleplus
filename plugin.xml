@@ -104,7 +104,7 @@
     </config-file>
 
     <!-- Google frameworks -->
-    <!--<framework src="src/ios/libs/GoogleOpenSource.framework" custom="true" />-->
+    <framework src="src/ios/libs/GoogleOpenSource.framework" custom="true" />
     <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
 
     <!-- System frameworks -->
