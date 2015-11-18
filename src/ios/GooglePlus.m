@@ -1,6 +1,6 @@
-#import <GoogleOpenSource/GoogleOpenSource.h>
+//#import <GoogleOpenSource/GoogleOpenSource.h>
 #import "AppDelegate.h"
-//#import "objc/runtime.h"
+#import "objc/runtime.h"
 #import "GooglePlus.h"
 
 // need to swap out a method, so swizzling it here
