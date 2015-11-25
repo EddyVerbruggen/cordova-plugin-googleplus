@@ -247,6 +247,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         NSString *email = user.profile.email;
         NSString *token = user.authentication.idToken;
         NSString *accessToken = user.authentication.accessToken;
+        NSString *refreshToken = user.authentication.refreshToken;
         NSString *userId = user.userID;
         NSString *serverAuthCode = user.serverAuthCode != nil ? user.serverAuthCode : @"";
 //        GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
@@ -256,6 +257,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                        @"idToken"     : token,
                        @"oauthToken"  : serverAuthCode,
                        @"accessToken" : accessToken,
+                       @"refreshToken": refreshToken,
                        @"userId"      : userId,
                        @"displayName" : user.profile.name ? : [NSNull null],
                        @"imageUrl"    : imageUrl ? imageUrl.absoluteString : [NSNull null],
