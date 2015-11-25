@@ -208,6 +208,9 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
             // Retrieve the oauth token with offline mode
             scope = "oauth2:" + Scopes.PLUS_LOGIN;
             token = GoogleAuthUtil.getToken(context, email, scope);
+            // Since this is a short-lived one time token immediately remove it from
+            // the cache. This ensures a new token each time the user authenticates.
+            GoogleAuthUtil.clearToken(context, token);
             result.put("oauthToken", token);
           }
         }
