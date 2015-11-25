@@ -41,7 +41,7 @@ To get your iOS API key, follow Step 1 of [this guide](https://developers.google
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
 
 ### Android
-To configure Android, follow Step 1 of [this guide](https://developers.google.com/+/quickstart/android)
+To configure Android, follow Step 2 (Get a configuration file) of [this guide](https://developers.google.com/identity/sign-in/android/start). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developper Console. There is no need to add the generated google-services.json file into your cordova project.
 
 Make sure you execute the `keytool` steps as well or authentication will fail.
 
