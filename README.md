@@ -41,7 +41,7 @@ To get your iOS API key, follow Step 1 of [this guide](https://developers.google
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
 
 ### Android
-To configure Android, follow Step 2 (Get a configuration file) of [this guide](https://developers.google.com/identity/sign-in/android/start). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developper Console. There is no need to add the generated google-services.json file into your cordova project.
+To configure Android, follow Step 2 (Get a configuration file) of [this guide](https://developers.google.com/identity/sign-in/android/start). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console. There is no need to add the generated google-services.json file into your cordova project.
 
 Make sure you execute the `keytool` steps as well or authentication will fail.
 
@@ -185,6 +185,8 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
+4.0.6: Updated iOS GoogleSignIn SDK to 2.4.0. Thx #153!
+4.0.5: Fixed a broken import on iOS
 4.0.4: Using framework tags again for Android.
 4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google SignIn framework. Re-added imageUrl to the result of SignIn on iOS.
 4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.

@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="4.0.5">
+        version="4.0.6">
 
   <name>Google+</name>
 
@@ -105,17 +105,16 @@
 
     <!-- Google frameworks -->
     <framework src="src/ios/libs/GoogleOpenSource.framework" custom="true" />
+    <!-- Downloaded here: https://developers.google.com/identity/sign-in/ios/sdk/ -->
     <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
 
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
-    <!--<framework src="CoreMotion.framework" weak="true" />-->
     <framework src="CoreText.framework" weak="true" />
-    <!--<framework src="CoreLocation.framework" weak="true" />-->
-    <!--<framework src="MediaPlayer.framework" weak="true" />-->
-    <!--<framework src="Security.framework" weak="true" />-->
     <framework src="StoreKit.framework" weak="true" />
     <framework src="SystemConfiguration.framework" weak="true" />
+    <framework src="libz.tbd" weak="true" />
+    <framework src="libz.dylib" weak="true" />
 
   </platform>
 
