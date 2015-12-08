@@ -98,7 +98,7 @@ window.plugins.googleplus.isAvailable(
 window.plugins.googleplus.login(
     {
       'scopes': '... ', // optional space-separated list of scopes, the default is sufficient for login and basic profile info
-      'offline': true, // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
+      'offline': true, // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oAuthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
       'webApiKey': 'api of web app', // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services
       // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
     },
@@ -185,15 +185,15 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
-4.0.6: Updated iOS GoogleSignIn SDK to 2.4.0. Thx #153!
-4.0.5: Fixed a broken import on iOS
-4.0.4: Using framework tags again for Android.
-4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google SignIn framework. Re-added imageUrl to the result of SignIn on iOS.
-4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.
-4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
-3.0.0: Using Google Sign-In for iOS, instead of Google+.
-1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
-1.0.0: Initial version supporting iOS and Android
+- 4.0.6: Updated iOS GoogleSignIn SDK to 2.4.0. Thx #153!
+- 4.0.5: Fixed a broken import on iOS
+- 4.0.4: Using framework tags again for Android.
+- 4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google SignIn framework. Re-added imageUrl to the result of SignIn on iOS.
+- 4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.
+- 4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
+- 3.0.0: Using Google Sign-In for iOS, instead of Google+.
+- 1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
+- 1.0.0: Initial version supporting iOS and Android
 
 ## 9. License
 
