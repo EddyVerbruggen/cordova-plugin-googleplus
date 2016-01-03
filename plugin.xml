@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="4.0.6">
+        version="4.0.7">
 
   <name>Google+</name>
 
@@ -109,6 +109,7 @@
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
     <framework src="CoreText.framework" weak="true" />
+    <framework src="Security.framework" weak="true" />
     <framework src="StoreKit.framework" weak="true" />
     <framework src="SystemConfiguration.framework" weak="true" />
     <framework src="libz.tbd" weak="true" />
