@@ -185,6 +185,7 @@ window.plugins.googleplus.disconnect(
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
 ## 8. Changelog
+- 4.0.7: Re-added a missing framework for iOS. Thx #168!
 - 4.0.6: Updated iOS GoogleSignIn SDK to 2.4.0. Thx #153!
 - 4.0.5: Fixed a broken import on iOS
 - 4.0.4: Using framework tags again for Android.
