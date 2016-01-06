@@ -13,7 +13,10 @@
     "Google Plus",
     "Google Login",
     "Login",
-    "OAuth"
+    "OAuth",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
   ],
   "platforms": [
     "android",
