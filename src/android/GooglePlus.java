@@ -275,6 +275,7 @@ public class GooglePlus extends CordovaPlugin implements ConnectionCallbacks, On
         if (!(Boolean) hasPermissionMethod.invoke(cordova, Manifest.permission.GET_ACCOUNTS)) {
           Method requestPermissionMethod = cordova.getClass().getMethod("requestPermission", CordovaPlugin.class, int.class, String.class);
           requestPermissionMethod.invoke(cordova, this, REQUEST_GET_ACCOUNTS, Manifest.permission.GET_ACCOUNTS);
+          return;
         }
       }
     } catch (Exception ignore) {
