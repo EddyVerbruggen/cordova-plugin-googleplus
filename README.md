@@ -184,6 +184,9 @@ window.plugins.googleplus.disconnect(
 - Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
+- Q: OMG $@#*! the Android build is failing
+- A: You need to have _Android Support Repository_ and _Android Support Library_ installed in the Android SDK manager. Make sure you're using a fairly up to date version of those.
+
 ## 8. Changelog
 - 4.0.8: Fix for Android 6 where it would crash while asking for permission. Thx #166!
 - 4.0.7: Re-added a missing framework for iOS. Thx #168!
