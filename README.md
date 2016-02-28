@@ -43,7 +43,7 @@ This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll ne
 ### Android
 To configure Android, follow Step 2 (Get a configuration file) of [this guide](https://developers.google.com/identity/sign-in/android/start). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console. There is no need to add the generated google-services.json file into your cordova project.
 
-Make sure you execute the `keytool` steps as well or authentication will fail.
+Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/drive/android/auth) or authentication will fail.
 
 ## 4. Installation (PhoneGap CLI / Cordova CLI)
 This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
