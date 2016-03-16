@@ -12,7 +12,7 @@
 
   <license>MIT</license>
 
-  <keywords>Google, Google+, GooglePlus, Google Plus, Google Login, Login, OAuth</keywords>
+  <keywords>Google, Google SignIn, GoogleSignIn, Google Login, Login, OAuth</keywords>
 
   <repo>https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git</repo>
 
@@ -29,7 +29,7 @@
   <!-- android -->
   <platform name="android">
 
-    <framework src="com.google.android.gms:play-services-plus:+" />
+    <framework src="com.google.android.gms:play-services-auth:+" />
     <framework src="com.google.android.gms:play-services-identity:+" />
 
     <config-file target="res/xml/config.xml" parent="/*">
@@ -102,7 +102,6 @@
     </config-file>
 
     <!-- Google frameworks -->
-    <framework src="src/ios/libs/GoogleOpenSource.framework" custom="true" />
     <!-- Downloaded here: https://developers.google.com/identity/sign-in/ios/sdk/ -->
     <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
 
