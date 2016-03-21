@@ -20,7 +20,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 //                  annotation: (id)annotation {
 //
 //  GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
-//  
+//
 //  if ([gp isSigningIn]) {
 //    gp.isSigningIn = NO;
 //    return [GPPURLHandler handleURL:url sourceApplication:sourceApplication annotation:annotation];
@@ -38,7 +38,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
            sourceApplication: (NSString *)sourceApplication
                   annotation: (id)annotation {
     GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
-    
+
     if ([gp isSigningIn]) {
         gp.isSigningIn = NO;
         return [[GIDSignIn sharedInstance] handleURL:url sourceApplication:sourceApplication annotation:annotation];
@@ -47,7 +47,11 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
     }
 }
-
+-(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options{
+    return [[GIDSignIn sharedInstance] handleURL:url
+                               sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                      annotation:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
+}
 
 @end
 
@@ -99,7 +103,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 //    [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
 //    return nil;
 //  }
-//  
+//
 //  GPPSignIn *signIn = [GPPSignIn sharedInstance];
 //  signIn.shouldFetchGooglePlusUser = YES;
 //  signIn.shouldFetchGoogleUserEmail = YES;
@@ -118,15 +122,15 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     _callbackId = command.callbackId;
     NSDictionary* options = [command.arguments objectAtIndex:0];
     NSString *reversedClientId = [self getreversedClientId];
-  
+
     if (reversedClientId == nil) {
         CDVPluginResult * pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Could not find REVERSED_CLIENT_ID url scheme in app .plist"];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:_callbackId];
         return nil;
     }
-  
+
     NSString *clientId = [self reverseUrlScheme:reversedClientId];
-  
+
     NSString* scopesString = [options objectForKey:@"scopes"];
     NSString* serverClientId = [options objectForKey:@"webApiKey"];
 
@@ -160,7 +164,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 
 - (NSString*) getreversedClientId {
   NSArray* URLTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
-  
+
   if (URLTypes != nil) {
     for (NSDictionary* dict in URLTypes) {
       NSString *urlName = [dict objectForKey:@"CFBundleURLName"];
@@ -208,7 +212,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 //    NSString *userId = [GPPSignIn sharedInstance].userID;
 //    GTLPlusPerson *person = [GPPSignIn sharedInstance].googlePlusUser;
 //    NSDictionary *result;
-//    
+//
 //    if (person == nil) {
 //      result = @{
 //                 @"email" : email
@@ -297,7 +301,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector) {
   Method destinationMethod = class_getInstanceMethod(class, destinationSelector);
   Method sourceMethod = class_getInstanceMethod(class, sourceSelector);
-  
+
   // If the method doesn't exist, add it.  If it does exist, replace it with the given implementation.
   if (class_addMethod(class, destinationSelector, method_getImplementation(sourceMethod), method_getTypeEncoding(sourceMethod))) {
     class_replaceMethod(class, destinationSelector, method_getImplementation(destinationMethod), method_getTypeEncoding(destinationMethod));
