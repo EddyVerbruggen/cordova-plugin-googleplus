@@ -1,5 +1,8 @@
 # Google+ Cordova/PhoneGap Plugin
-by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
+by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)  
+
+3/29/2016:
+Forked and Updated by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
 
 ## 0. Index
 
@@ -16,7 +19,8 @@ by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 ## 1. Description
 
 This plugin allows you to log on with your Google account on iOS and Android.
-You will not only get the email address of the user, but also stuff like their full name and gender.
+Out of the box, you'll get email, display name, profile picture url, and user id.
+You can also configure it to get an [idToken](https://developers.google.com/identity/sign-in/android/backend-auth) and [serverAuthCode](https://developers.google.com/identity/sign-in/android/offline-access).
 
 ## 2. Screenshots
 
@@ -36,7 +40,7 @@ Android
 To communicate with Google+ you need to do some tedious setup, sorry.
 
 ### iOS
-To get your iOS API key, follow Step 1 of [this guide](https://developers.google.com/+/mobile/ios/getting-started)
+To get your iOS `REVERSED_CLIENT_ID`, follow Step 1 of [this guide](https://developers.google.com/+/mobile/ios/getting-started)
 [get a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation.
 
@@ -92,13 +96,26 @@ window.plugins.googleplus.isAvailable(
 It is no longer required to check this for iOS, as the sign-in takes to custom webView provided by Google SDK, instead of Safari browser. 
 
 ### Login
+
+The login function walks the user through the Google Auth process.
+
+All of the options are optional, however there are a few caveats.
+
+The space-separated string of `scopes` will be requested exactly as passed in. Refer to the [Google Scopes](https://developers.google.com/android/reference/com/google/android/gms/common/Scopes#constant-summary) documentation for info on valid scopes that can be requested.
+
+To get an `idToken` on Android, you ***must*** pass in your `webClientId`. On iOS, the `idToken` is included in the sign in result by default.
+
+The `webClientId` and `offline` options are optional, however `offline` will only be evaluated if a `webClientId` is passed in as well. That is to say, if offline is true, but no webClientId is provided, the `serverAuthCode` will ***NOT*** be requested.
+
+Recapping, pass in a `webClientId`, get back on `idToken` on iOS and Android. Pass in a `webClientId` and set offline as `true`, you'll get back an `idToken` and a `serverAuthCode` on iOS and Android. No `webClientId`, no `serverAuthCode`.
+
+##### Usage
 ```javascript
 window.plugins.googleplus.login(
     {
-      'scopes': '... ', // optional space-separated list of scopes, the default is sufficient for login and basic profile info
-      'offline': true, // optional, used for Android only - if set to true the plugin will also return the OAuth access token ('oauthToken' param), that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
-      'webApiKey': 'api of web app', // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services
-      // there is no API key for Android; you app is wired to the Google+ API by listing your package name in the google dev console and signing your apk (which you have done in chapter 4)
+      'scopes': '... ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+      'webClientId': 'client id of the web app/server side', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+      'offline': true, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
@@ -109,26 +126,21 @@ window.plugins.googleplus.login(
 );
 ```
 
-Note that if you're only targeting Android you can pass `{}` for the first argument.
-
 The success callback (second argument) gets a JSON object with the following contents, with example data of my Google+ account:
 ```javascript
- obj.email        // 'eddyverbruggen@gmail.com'
- obj.userId       // user id
- obj.displayName  // 'Eddy Verbruggen'
- obj.imageUrl     // 'http://link-to-my-profilepic.google.com'
- obj.idToken
- obj.oauthToken
-
- // these are only available on Android at the moment
- obj.gender       // 'male' (other options are 'female' and 'unknown'
- obj.givenName    // 'Eddy'
- obj.middleName   // null (or undefined, depending on the platform)
- obj.familyName   // 'Verbruggen'
- obj.birthday     // '1977-04-22'
- obj.ageRangeMin  // 21 (or null or undefined or a different number)
- obj.ageRangeMax  // null (or undefined or a number)
+ obj.email          // 'eddyverbruggen@gmail.com'
+ obj.userId         // user id
+ obj.displayName    // 'Eddy Verbruggen'
+ obj.imageUrl       // 'http://link-to-my-profilepic.google.com'
+ obj.idToken        // idToken that can be exchanged to verify user identity.
+ obj.serverAuthCode // Auth code that can be exchanged for an access token and refresh token for offline access
 ```
+
+Additional user information is available by use case. Add the scopes needed to the scopes option then return the info to the result object being created in the `handleSignInResult` and `didSignInForUser` functions on Android and iOS, respectively.
+
+On Android, the error callback (third argument) receives an error status code if authentication was not successful. A description of those status codes can be found on Google's android developer website at [GoogleSignInStatusCodes](https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInStatusCodes).
+
+On iOS, the error callback will include an [NSError localizedDescription](https://developer.apple.com/library/mac/documentation/Cocoa/Reference/Foundation/Classes/NSError_Class/).
 
 ### Try silent login
 When the user comes back to your app and you're not sure if he needs to log in,
@@ -137,12 +149,13 @@ you can call `trySilentLogin` to try logging him in.
 If it succeeds you will get the same object as the `login` function gets,
 but if it fails it will not show the authentication dialog to the user.
 
-The code is exactly the same a `login`, except for the function name.
+Calling `trySilentLogin` is done the same as `login`, except for the function name.
 ```javascript
 window.plugins.googleplus.trySilentLogin(
     {
-      'offline': true, // optional and required for Android only - if set to true the plugin will also return the OAuth access token, that can be used to sign in to some third party services that don't accept a Cross-client identity token (ex. Firebase)
-      'webApiKey': 'api of web app' // optional API key of your Web application from Credentials settings of your project - if you set it the returned idToken will allow sign in to services like Azure Mobile Services 
+      'scopes': '... ', // optional - space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+      'webClientId': 'client id of the web app/server side', // optional - clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+      'offline': true, // Optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
@@ -152,6 +165,8 @@ window.plugins.googleplus.trySilentLogin(
     }
 );
 ```
+
+It is strongly recommended that trySilentLogin is implemented with the same options as login, to avoid any potential complications.
 
 ### logout
 This will clear the OAuth2 token.
