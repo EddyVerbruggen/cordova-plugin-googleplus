@@ -79,10 +79,6 @@ Note that none of these methods should be called before [`deviceready`](http://d
 
 ### isAvailable
 You'll want to check this before showing a 'Sign in with Google+' button.
-
-On iOS it will check whether or not the Google+ app is installed. If it's not and you invoke the `login` function,
-your app will redirect to Safari [which seems an app rejection reason these days](https://code.google.com/p/google-plus-platform/issues/detail?id=900).
-
 On Android it will check whether or not Google Play Services is available. It's more likely than not that it is.
 
 ```javascript
@@ -94,6 +90,8 @@ window.plugins.googleplus.isAvailable(
     }
 );
 ```
+
+It is no longer required to check this for iOS, as the sign-in takes to custom webView provided by Google SDK, instead of Safari browser. 
 
 ### Login
 
