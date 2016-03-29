@@ -1,6 +1,6 @@
 # Google+ Cordova/PhoneGap Plugin
 by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)  
-Forked and Updated by [PointSource, LLC](https://github.com/PointSource)
+Forked and Updated by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
 
 ## 0. Index
 
