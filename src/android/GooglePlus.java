@@ -1,16 +1,13 @@
 package nl.xservices.plugins;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -20,18 +17,12 @@ import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Originally written by Eddy Verbruggen (http://github.com/EddyVerbruggen/cordova-plugin-googleplus)
  * Forked/Duplicated and Modified by PointSource, LLC, 2016.
  */
 public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConnectionFailedListener {
 
-    public static final String ACTION_INITIALIZATION = "init";
     public static final String ACTION_IS_AVAILABLE = "isAvailable";
     public static final String ACTION_LOGIN = "login";
     public static final String ACTION_TRY_SILENT_LOGIN = "trySilentLogin";
@@ -45,11 +36,6 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
 
     public static final String TAG = "GooglePlugin";
     public static final int RC_GOOGLEPLUS = 77552; // Request Code to identify our plugin's activities
-
-    /**
-     * JSON of useful information from the result of a successful connection to the google services api
-     */
-    private JSONObject result;
 
     // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -70,7 +56,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
         Log.i(TAG, "Determining command to execute");
 
         if (ACTION_IS_AVAILABLE.equals(action)) {
-            final boolean avail = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this.cordova.getActivity().getApplicationContext()) == 0;
+            final boolean avail = true;
             savedCallbackContext.success("" + avail);
 
         } else if (ACTION_LOGIN.equals(action)) {
@@ -123,28 +109,26 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
         // Make our SignIn Options builder.
         GoogleSignInOptions.Builder gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN);
 
+        // request the default scopes
+        gso.requestEmail().requestProfile();
+
         // We're building the scopes on the Options object instead of the API Client
         // b/c of what was said under the "addScope" method here:
         // https://developers.google.com/android/reference/com/google/android/gms/common/api/GoogleApiClient.Builder.html#public-methods
         String scopes = clientOptions.optString(ARGUMENT_SCOPES, null);
-        
-        if (scopes != null || scopes != "")
 
+        if (scopes != null && !scopes.isEmpty()) {
             // We have a string of scopes passed in. Split by space and request
             for (String scope : scopes.split(" ")) {
                 gso.requestScopes(new Scope(scope));
             }
-
-        else {
-            //just request the default scopes
-            gso.requestEmail().requestProfile();
         }
 
         // Try to get web client id
         String webClientId = clientOptions.optString(ARGUMENT_WEB_CLIENT_ID, null);
 
         // if webClientId included, we'll request an idToken
-        if (webClientId != null) {
+        if (webClientId != null && !webClientId.isEmpty()) {
             gso.requestIdToken(webClientId);
 
             // if webClientId is included AND offline is true, we'll request the serverAuthCode
@@ -177,12 +161,12 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     }
 
     /**
-     * Trys to log the user in silently using existing sign in result information
+     * Tries to log the user in silently using existing sign in result information
      */
     private void trySilentLogin() {
-        ConnectionResult apiconnect =  mGoogleApiClient.blockingConnect();
+        ConnectionResult apiConnect =  mGoogleApiClient.blockingConnect();
 
-        if (apiconnect.isSuccess()) {
+        if (apiConnect.isSuccess()) {
             handleSignInResult(Auth.GoogleSignInApi.silentSignIn(this.mGoogleApiClient).await());
         }
     }
@@ -191,20 +175,22 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      * Signs the user out from the client
      */
     private void signOut() {
-        ConnectionResult apiconnect = mGoogleApiClient.blockingConnect();
+        ConnectionResult apiConnect = mGoogleApiClient.blockingConnect();
 
-        if (apiconnect.isSuccess()) {
-            Auth.GoogleSignInApi.signOut(this.mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(Status status) {
-                    //on success, tell cordova
-                    if (status.isSuccess()) {
-                        savedCallbackContext.success("Logged user out");
-                    } else {
-                        savedCallbackContext.error(status.getStatusCode());
+        if (apiConnect.isSuccess()) {
+            Auth.GoogleSignInApi.signOut(this.mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            //on success, tell cordova
+                            if (status.isSuccess()) {
+                                savedCallbackContext.success("Logged user out");
+                            } else {
+                                savedCallbackContext.error(status.getStatusCode());
+                            }
+                        }
                     }
-                }
-            });
+            );
         }
     }
 
@@ -212,24 +198,28 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      * Disconnects the user and revokes access
      */
     private void disconnect() {
-        ConnectionResult apiconnect = mGoogleApiClient.blockingConnect();
+        ConnectionResult apiConnect = mGoogleApiClient.blockingConnect();
 
-        if (apiconnect.isSuccess()) {
-            Auth.GoogleSignInApi.revokeAccess(this.mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
-                @Override
-                public void onResult(Status status) {
-                    if (status.isSuccess()) {
-                        savedCallbackContext.success("Disconnected user");
-                    } else {
-                        savedCallbackContext.error(status.getStatusCode());
+        if (apiConnect.isSuccess()) {
+            Auth.GoogleSignInApi.revokeAccess(this.mGoogleApiClient).setResultCallback(
+                    new ResultCallback<Status>() {
+                        @Override
+                        public void onResult(Status status) {
+                            if (status.isSuccess()) {
+                                savedCallbackContext.success("Disconnected user");
+                            } else {
+                                savedCallbackContext.error(status.getStatusCode());
+                            }
+                        }
                     }
-                }
-            });
+            );
         }
     }
 
     /**
      * Handles failure in connecting to google apis.
+     *
+     * @param result is the ConnectionResult to potentially catch
      */
     @Override
     public void onConnectionFailed(ConnectionResult result) {
@@ -278,36 +268,36 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      *      INTERNAL_ERROR = 8
      *      NETWORK_ERROR = 7
      *
-     * @param signinResult - the GoogleSignInResult object retrieved in the onActivityResult method.
+     * @param signInResult - the GoogleSignInResult object retrieved in the onActivityResult method.
      */
-    public void handleSignInResult(GoogleSignInResult signinResult) {
+    private void handleSignInResult(GoogleSignInResult signInResult) {
         if (this.mGoogleApiClient == null) {
             savedCallbackContext.error("GoogleApiClient was never initialized");
             return;
         }
     
-        Log.i(TAG, "in handleSignInResult");
+        Log.i(TAG, "Handling SignIn Result");
 
-        if (!signinResult.isSuccess()) {
+        if (!signInResult.isSuccess()) {
             Log.i(TAG, "Wasn't signed in");
 
             //Return the status code to be handled client side
-            savedCallbackContext.error(signinResult.getStatus().getStatusCode());
+            savedCallbackContext.error(signInResult.getStatus().getStatusCode());
         } else {
-            GoogleSignInAccount acct = signinResult.getSignInAccount();
+            GoogleSignInAccount acct = signInResult.getSignInAccount();
 
-            this.result = new JSONObject();
+            JSONObject result = new JSONObject();
 
             try {
                 Log.i(TAG, "trying to get account information");
 
                 result.put("email", acct.getEmail());
 
-                //only gets included if requested (See Line 164). Empty string if not received.
-                result.put("idToken", (acct.getIdToken() != null ? acct.getIdToken() : ""));
-                
-                //only gets included if requested (See Line 166). Empty string if not received.
-                result.put("serverAuthCode", (acct.getServerAuthCode() != null ? acct.getServerAuthCode() : ""));
+                //only gets included if requested (See Line 164).
+                result.put("idToken", acct.getIdToken());
+
+                //only gets included if requested (See Line 166).
+                result.put("serverAuthCode", acct.getServerAuthCode());
 
                 result.put("userId", acct.getId());
                 result.put("displayName", acct.getDisplayName());

@@ -10,7 +10,7 @@
 /** 
   Updates to be more aligned with updated Android version and with Google.
  @date March 15, 2015
- @author PointSource, LLC
+ @author Sam Muggleworth (PointSource, LLC)
  */
 
 // need to swap out a method, so swizzling it here

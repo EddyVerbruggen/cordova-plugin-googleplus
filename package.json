@@ -1,5 +1,5 @@
 {
-  "version": "4.0.8",
+  "version": "4.0.9",
   "name": "cordova-plugin-googleplus",
   "cordova_name": "Google+",
   "description": "Use your Google account to authenticate with the app.",
@@ -8,12 +8,13 @@
   "issue": "https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues",
   "keywords": [
     "Google",
-    "Google+",
-    "GooglePlus",
-    "Google Plus",
+    "Google SignIn",
+    "GoogleSignIn",
     "Google Login",
     "Login",
     "OAuth",
+    "Identity",
+    "Authentication",
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios"
