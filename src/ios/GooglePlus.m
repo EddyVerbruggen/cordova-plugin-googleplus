@@ -41,12 +41,6 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
     }
 }
--(BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options{
-    return [[GIDSignIn sharedInstance] handleURL:url
-                               sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-                                      annotation:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
-}
-
 @end
 
 @implementation GooglePlus
@@ -60,7 +54,6 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 }
 
 - (void) login:(CDVInvokedUrlCommand*)command {
-  self.isSigningIn = YES;
   [[self getGIDSignInObject:command] signIn];
 }
 
@@ -68,7 +61,6 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
  @date July 19, 2015
  */
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command {
-    self.isSigningIn = YES;
     [[self getGIDSignInObject:command] signInSilently];
 }
 
@@ -191,6 +183,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
  @date July 19, 2015
  */
 - (void)signIn:(GIDSignIn *)signIn presentViewController:(UIViewController *)viewController {
+    self.isSigningIn = YES;
     [self.viewController presentViewController:viewController animated:YES completion:nil];
 }
 
