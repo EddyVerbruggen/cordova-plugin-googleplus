@@ -41,6 +41,21 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
     }
 }
+
+- (BOOL)identity_application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary *)options {
+    GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+    
+    if ([gp isSigningIn]){
+        gp.isSigningIn = false;
+        return [[GIDSignIn sharedInstance] handleURL:url
+                                   sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                                          annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    }else{
+        //call super
+        return [self identity_application:app openURL:url sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey] annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    }
 @end
 
 @implementation GooglePlus
