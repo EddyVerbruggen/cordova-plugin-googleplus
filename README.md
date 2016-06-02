@@ -1,10 +1,10 @@
 # Google Sign-In Cordova/PhoneGap Plugin
-by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)  
+by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 
-3/29/2016:
-Forked and Updated by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
+Last Update on 6/9/2016 by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
 
 *ATTENTION: The NPM registry currently returns an older version of this plugin. This README contains documentation for the most recent version.*
+*See [this version of the README](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/blob/886fda37764a6b253f1b1915e99deb03ff94bef4/README.md) for documentation on the npm version.*
 
 ## 0. Index
 
@@ -47,6 +47,18 @@ To communicate with Google you need to do some tedious setup, sorry.
 
 It is (strongly) recommended that you use the same project for both iOS and Android.
 
+### Before you proceed
+Go into your `config.xml` and make sure that your package name (i.e. the app ID) is what you want it to be. Use this package name when setting up iOS and Android in the following steps! If you don't, you will likely get a 12501, 'user cancelled' error despite never cancelling the log in process.
+
+This step is _especially_ important if you are using a framework such as Ionic to scaffold out your project. When you create the project, the `config.xml` has a placeholder packagename, e.g. com.ionic.*, so you can start developing right away.
+
+```xml
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="** REPLACE THIS VALUE **" ...>
+...
+</widget>
+```
+
 ### iOS
 To get your iOS `REVERSED_CLIENT_ID`, [generate a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
 This `GoogleService-Info.plist` file contains the `REVERSED_CLIENT_ID` you'll need during installation. _This value is only needed for iOS._
@@ -71,13 +83,13 @@ This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordo
 
 Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus)
 ```
-$ cordova plugin add cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
 
 To fetch the latest version from GitHub, use
 ```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
 
@@ -87,9 +99,18 @@ GooglePlus.js is brought in automatically. There is no need to change or add any
 
 ## 5. Installation (PhoneGap Build)
 Add this to your config.xml:
+
+For the NPM Version:
 ```xml
 <gap:plugin name="cordova-plugin-googleplus" source="npm">
   <param name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+</gap:plugin>
+```
+
+For the Git version:
+```xml
+<gap:plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git" source="git">
+    <param name="REVERSED_CLIENT_ID" value="myreversedclientid" />
 </gap:plugin>
 ```
 
@@ -114,17 +135,15 @@ function deviceReady() {
 
 ### Login
 
-The login function walks the user through the Google Auth process.
-
-All of the options are optional, however there are a few caveats.
-
-The space-separated string of `scopes` will be requested exactly as passed in. Refer to the [Google Scopes](https://developers.google.com/android/reference/com/google/android/gms/common/Scopes#constant-summary) documentation for info on valid scopes that can be requested.
+The login function walks the user through the Google Auth process. All parameters are optional, however there are a few caveats.
 
 To get an `idToken` on Android, you ***must*** pass in your `webClientId`. On iOS, the `idToken` is included in the sign in result by default.
 
-The `webClientId` and `offline` options are optional, however `offline` will only be evaluated if a `webClientId` is passed in as well. That is to say, if offline is true, but no webClientId is provided, the `serverAuthCode` will _**NOT**_ be requested.
+To get a `serverAuthCode`, you must pass in your `webClientId` _and_ set `offline` to true. If offline is true, but no webClientId is provided, the `serverAuthCode` will _**NOT**_ be requested.
 
-**Recapping**, pass in a `webClientId` to get back an `idToken` on iOS and Android. Pass in a `webClientId` _AND_ set `offline` as `true`, you'll get back an `idToken` and a `serverAuthCode` on iOS and Android. No `webClientId`, no `serverAuthCode`.
+The default scopes requested are `profile` and `email` (always requested). To request other scopes, add them as a **space-separated list** to the `scopes` parameter. They will be requested exactly as passed in. Refer to the [Google Scopes](https://developers.google.com/identity/protocols/googlescopes) documentation for info on valid scopes that can be requested. For example, `'scope': 'https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/tasks'`.
+
+Naturally, in order to use any additional scopes or APIs, they will need to be activated in your project Developer's Console.
 
 ##### Usage
 ```javascript
