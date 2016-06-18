@@ -1,7 +1,30 @@
 # Google Sign-In Cordova/PhoneGap Plugin
-by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
+Forked from [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 
 Last Update on 6/9/2016 by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
+
+### Why the Fork
+So I forked the original repositories because I was getting 286 duplicate symbol error when trying to compule the iOS version on Xcode. The reason was a conflict between this plugin and the [Push Notification plugin](https://github.com/phonegap/phonegap-plugin-push) I was using. The problem is they were using the same [GTM libraries](https://github.com/google/google-toolbox-for-mac) (A Google utitlities library that make things easier to write in iOS), and this was creating the conflict. So I went through the steps [here](http://atnan.com/blog/2012/01/12/avoiding-duplicate-symbol-errors-during-linking-by-removing-classes-from-static-libraries) and updated the `GoogleSignIn` library on `/src/ios/libs/GoogleSignIn.framework/GoogleSignIn` after removing the following object files for `armv7`, `arm64`, `i386`, and `arm86x_64` architectures:
+
+```
+GTMABAddressBook.o
+GTMFadeTruncatingLabel.o
+GTMGatherInputStream.o
+GTMLogger.o
+GTMMIMEDocument.o
+GTMNSObject+KeyValueObserving.o
+GTMReadMonitorInputStream.o
+GTMRegex.o
+GTMSessionFetcher.o
+GTMSessionFetcherService.o
+GTMSessionUploadFetcher.o
+GTMStringEncoding.o
+GTMSystemVersion.o
+GTMUILocalize.o
+GTMURLBuilder.o
+```
+
+
 
 *ATTENTION: The NPM registry currently returns an older version of this plugin. This README contains documentation for the most recent version.*
 *See [this version of the README](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/blob/886fda37764a6b253f1b1915e99deb03ff94bef4/README.md) for documentation on the npm version.*
