@@ -72,6 +72,11 @@ To configure Android, [generate a configuration file here](https://developers.go
 
 Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/drive/android/auth) or authentication will fail.
 
+IMPORTANT: Ensure that you are using the correct alias name while generating the fingerprint.
+```
+$ keytool -exportcert -keystore <path-to-debug-or-production-keystore> -list -v -alias <alias-name>
+```
+
 Login on Android will use the accounts signed in on the user's device.
 
 ### Web Client Id
