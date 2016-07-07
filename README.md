@@ -266,6 +266,9 @@ As stated before, this plugin is all about user authentication and identity, so 
 - Q: OMG $@#*! the Android build is failing
 - A: You need to have _Android Support Repository_ and _Android Support Library_ installed in the Android SDK manager. Make sure you're using a fairly up to date version of those.
 
+- Q: Why isn't this working on my Android Emulator???
+- A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
+
 ## 10. Changelog
 - [pre-release] 4.0.9: Android refactored to use the GoogleSignIn SDK. Modified usage. See #193
 - 4.0.8: Fix for Android 6 where it would crash while asking for permission. Thx #166!
