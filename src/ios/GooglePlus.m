@@ -41,6 +41,27 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
     }
 }
+
+/**
+From https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/227#issuecomment-227674026
+Fixes issue with G+ login window not closing correctly on ios 9
+*/
+- (BOOL)application: (UIApplication *)app
+            openURL: (NSURL *)url
+            options: (NSDictionary *)options
+{
+    if ([url.absoluteString hasPrefix:@"com.googleusercontent.apps"]) {
+        // Google
+        return [[GIDSignIn sharedInstance] handleURL:url
+            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    } else {
+        // Other
+        return [self application:app openURL:url
+            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    }
+}
 @end
 
 @implementation GooglePlus
