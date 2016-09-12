@@ -4,7 +4,7 @@
         id="cordova-plugin-googleplus"
         version="5.0.0">
 
-  <name>Google+</name>
+  <name>Google SignIn</name>
 
   <description>Use your Google account to authenticate with the app.</description>
 

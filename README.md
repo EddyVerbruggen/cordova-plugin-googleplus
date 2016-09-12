@@ -1,8 +1,6 @@
 # Google Sign-In Cordova/PhoneGap Plugin
-by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
-
-Update on 6/9/2016 by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
-Last Update on 8/17/2016 by Risley Lima
+by [Eddy Verbruggen](http://twitter.com/eddyverbruggen),
+with great assistance from Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
 
 *ATTENTION: The NPM registry currently returns an older version of this plugin. This README contains documentation for the most recent version.*
 *See [this version of the README](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/blob/886fda37764a6b253f1b1915e99deb03ff94bef4/README.md) for documentation on the npm version.*
@@ -283,6 +281,7 @@ As stated before, this plugin is all about user authentication and identity, so 
 - A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
 
 ## 10. Changelog
+- 5.0.0: iOS SDK 4.0.0, iOS compatibility with Facebook authentication plugins, added `familName` and `givenName`.
 - [pre-release] 4.0.9: Android refactored to use the GoogleSignIn SDK. Modified usage. See #193
 - 4.0.8: Fix for Android 6 where it would crash while asking for permission. Thx #166!
 - 4.0.7: Re-added a missing framework for iOS. Thx #168!
