@@ -14,7 +14,6 @@ with great assistance from Sam Muggleworth ([PointSource, LLC](https://github.co
 8. [Exchanging the `serverAuthCode`](#8-exchanging-the-serverauthcode)
 9. [Troubleshooting](#9-troubleshooting)
 10. [Changelog](#10-changelog)
-11. [License](#11-license)
 
 ## 1. Description
 
@@ -287,25 +286,3 @@ As stated before, this plugin is all about user authentication and identity, so 
 - 3.0.0: Using Google Sign-In for iOS, instead of Google+.
 - 1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
 - 1.0.0: Initial version supporting iOS and Android
-
-## 11. License
-
-[The MIT License (MIT)](http://www.opensource.org/licenses/mit-license.html)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
