@@ -19,7 +19,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 @implementation AppDelegate (IdentityUrlHandling)
 
 + (void)load {
-  swizzleMethod([AppDelegate class],
+    swizzleMethod([AppDelegate class],
                 @selector(application:openURL:sourceApplication:annotation:),
                 @selector(identity_application:openURL:sourceApplication:annotation:));
 
