@@ -275,7 +275,12 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             savedCallbackContext.error("GoogleApiClient was never initialized");
             return;
         }
-    
+
+        if (signInResult == null) {
+          savedCallbackContext.error("SignInResult is null");
+          return;
+        }
+
         Log.i(TAG, "Handling SignIn Result");
 
         if (!signInResult.isSuccess()) {
@@ -304,7 +309,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
                 result.put("familyName", acct.getFamilyName());
                 result.put("givenName", acct.getGivenName());
                 result.put("imageUrl", acct.getPhotoUrl());
-        
+
                 this.savedCallbackContext.success(result);
             } catch (JSONException e) {
                 savedCallbackContext.error("Trouble parsing result, error: " + e.getMessage());
