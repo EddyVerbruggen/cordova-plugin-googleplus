@@ -120,14 +120,6 @@ typedef NS_ENUM(NSInteger, GIDSignInErrorCode) {
 // Defaults to |YES|.
 @property(nonatomic, assign) BOOL shouldFetchBasicProfile;
 
-// Whether or not to switch to Chrome or Safari if no suitable Google apps are installed.
-// Defaults to |YES|.
-@property(nonatomic, assign) BOOL allowsSignInWithBrowser;
-
-// Whether or not to support sign-in via a web view.
-// Defaults to |YES|.
-@property(nonatomic, assign) BOOL allowsSignInWithWebView;
-
 // The language for sign-in, in the form of ISO 639-1 language code optionally followed by a dash
 // and ISO 3166-1 alpha-2 region code, such as |@"it"| or |@"pt-PT"|. Only set if different from
 // system default.
@@ -189,11 +181,5 @@ typedef NS_ENUM(NSInteger, GIDSignInErrorCode) {
 // Disconnects the current user from the app and revokes previous authentication. If the operation
 // succeeds, the OAuth 2.0 token is also removed from keychain.
 - (void)disconnect;
-
-// DEPRECATED: this method always calls back with |NO| on iOS 9 or above. Do not use this method.
-// Checks if a Google app to handle sign in requests is installed on the user's device on iOS 8 or
-// below.
-- (void)checkGoogleSignInAppInstalled:(void (^)(BOOL isInstalled))callback
-    DEPRECATED_MSG_ATTRIBUTE("This method always calls back with |NO| on iOS 9 or above.");
 
 @end

@@ -67,16 +67,6 @@
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>
-          <key>CFBundleTypeRole</key>
-          <string>Editor</string>
-          <key>CFBundleURLName</key>
-          <string>$PACKAGE_NAME</string>
-          <key>CFBundleURLSchemes</key>
-          <array>
-            <string>$PACKAGE_NAME</string>
-          </array>
-        </dict>
-        <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
@@ -89,27 +79,17 @@
       </array>
     </config-file>
 
-    <!-- iOS9 whitelisting -->
-    <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
-      <array>
-        <string>$PACKAGE_NAME</string>
-        <string>$REVERSED_CLIENT_ID</string>
-        <string>com-google-gidconsent</string>
-        <string>com-google-gidconsent-google</string>
-        <string>com.google.gppconsent.2.4.0</string>
-        <string>com.google.gppconsent.2.4.1</string>
-      </array>
-    </config-file>
-
     <!-- Google frameworks -->
     <!-- Downloaded here: https://developers.google.com/identity/sign-in/ios/sdk/ -->
+    <framework src="src/ios/libs/GoogleAppUtilities.framework" custom="true" />
+    <framework src="src/ios/libs/GoogleAuthUtilities.framework" custom="true" />
+    <framework src="src/ios/libs/GoogleNetworkingUtilities.framework" custom="true" />
     <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
+    <framework src="src/ios/libs/GoogleSymbolUtilities.framework" custom="true" />
+    <framework src="src/ios/libs/GoogleUtilities.framework" custom="true" />
 
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
-    <framework src="CoreText.framework" weak="true" />
-    <framework src="Security.framework" weak="true" />
-    <framework src="StoreKit.framework" weak="true" />
     <framework src="SystemConfiguration.framework" weak="true" />
     <framework src="libz.tbd" weak="true" />
     <framework src="libz.dylib" weak="true" />

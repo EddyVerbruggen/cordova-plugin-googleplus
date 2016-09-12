@@ -120,7 +120,6 @@ Fixes issue with G+ login window not closing correctly on ios 9
       signIn.serverClientID = serverClientId;
     }
 
-    signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
     signIn.uiDelegate = self;
     signIn.delegate = self;
 
@@ -129,8 +128,6 @@ Fixes issue with G+ login window not closing correctly on ios 9
         NSArray* scopes = [scopesString componentsSeparatedByString:@" "];
         [signIn setScopes:scopes];
     }
-    [signIn setAllowsSignInWithBrowser:NO]; // disabling as this may be a rejection reason for Apple
-    [signIn setAllowsSignInWithWebView:YES]; // assuming this should be fine
     return signIn;
 }
 

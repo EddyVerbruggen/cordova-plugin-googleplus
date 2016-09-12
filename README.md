@@ -24,7 +24,7 @@ Last Update on 8/17/2016 by Risley Lima
 ## 1. Description
 
 This plugin allows you to authenticate and identify users with [Google Sign-In](https://developers.google.com/identity/) on [iOS](https://developers.google.com/identity/sign-in/ios/) and [Android](https://developers.google.com/identity/sign-in/android/).
-Out of the box, you'll get email, display name, profile picture url, and user id.
+Out of the box, you'll get email, display name, given name, family name, profile picture url, and user id.
 You can also configure it to get an [idToken](#7-exchanging-the-idtoken) and [serverAuthCode](#8-exchanging-the-serverauthcode).
 
 This plugin only wraps access to the Google Sign-In API. Further API access should be implemented per use-case, per developer.
@@ -93,17 +93,18 @@ This plugin is compatible with:
 
 Here's how it works (backup your project first!):
 
-Using the Cordova CLI to fetch the latest version from GitHub (Recommended):
-```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
-$ cordova prepare
-```
-
 Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus):
 ```
 $ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
+
+Using the Cordova CLI to fetch the latest version from GitHub:
+```
+$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova prepare
+```
+
 IMPORTANT:
 
 * _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
@@ -182,6 +183,8 @@ The success callback (second argument) gets a JSON object with the following con
  obj.email          // 'eddyverbruggen@gmail.com'
  obj.userId         // user id
  obj.displayName    // 'Eddy Verbruggen'
+ obj.familyName     // 'Verbruggen'
+ obj.givenName      // 'Eddy'
  obj.imageUrl       // 'http://link-to-my-profilepic.google.com'
  obj.idToken        // idToken that can be exchanged to verify user identity.
  obj.serverAuthCode // Auth code that can be exchanged for an access token and refresh token for offline access
