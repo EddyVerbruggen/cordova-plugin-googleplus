@@ -1,7 +1,8 @@
 # Google Sign-In Cordova/PhoneGap Plugin
 by [Eddy Verbruggen](http://twitter.com/eddyverbruggen)
 
-Last Update on 6/9/2016 by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
+Update on 6/9/2016 by Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
+Last Update on 8/17/2016 by Risley Lima
 
 *ATTENTION: The NPM registry currently returns an older version of this plugin. This README contains documentation for the most recent version.*
 *See [this version of the README](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/blob/886fda37764a6b253f1b1915e99deb03ff94bef4/README.md) for documentation on the npm version.*
@@ -70,13 +71,14 @@ Login on iOS takes the user to a [SafariViewController](https://developer.apple.
 ### Android
 To configure Android, [generate a configuration file here](https://developers.google.com/mobile/add?platform=android&cntapi=signin). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console. There is no need to add the generated google-services.json file into your cordova project.
 
-Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/drive/android/auth) or authentication will fail.
+Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/android/guides/client-auth) or authentication will fail.
 
-IMPORTANT: Ensure that you are using the correct alias name while generating the fingerprint.
+IMPORTANT:
+* The step above, about `keytool`, show 2 types of certificate fingerprints, the **Release** and the **Debug**, when generating the configuration file, it's better to use the **Debug** certificate fingerprint, after that, you have to go on [Google Credentials Manager](https://console.developers.google.com/apis/credentials), and manually create a credential for **OAuth2 client** with your **Release** certificate fingerprint. This is necessary to your application work on both Development and Production releases.
+* Ensure that you are using the correct alias name while generating the fingerprint.
 ```
 $ keytool -exportcert -keystore <path-to-debug-or-production-keystore> -list -v -alias <alias-name>
 ```
-
 Login on Android will use the accounts signed in on the user's device.
 
 ### Web Client Id
@@ -84,21 +86,29 @@ Login on Android will use the accounts signed in on the user's device.
 If you want to get an `idToken` or `serverAuthCode` back from the Sign In Process, you will need to pass the client ID for your project's web application. This can be found on your project's API credentials page on the [Google Developer's Console](https://console.developers.google.com/).
 
 ## 4. Installation (PhoneGap CLI / Cordova CLI)
-This plugin is compatible with [Cordova Plugman](https://github.com/apache/cordova-plugman), compatible with [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features), here's how it works with the CLI (backup your project first!):
+This plugin is compatible with:
+* [Cordova Plugman](https://github.com/apache/cordova-plugman)
+* [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features)
+* [Ionic](http://ionic.io/) ***(must use the Cordova CLI)***
 
-Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus)
-```
-$ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
-$ cordova prepare
-```
+Here's how it works (backup your project first!):
 
-To fetch the latest version from GitHub, use
+Using the Cordova CLI to fetch the latest version from GitHub (Recommended):
 ```
 $ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
 $ cordova prepare
 ```
 
-_Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes._
+Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus):
+```
+$ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova prepare
+```
+IMPORTANT:
+
+* _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
+
+* _If you are building a hybrid application **(iOS and Android)**, or an Android application, you have to replace `myreversedclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes._
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
 
