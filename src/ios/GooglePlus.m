@@ -35,7 +35,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                      openURL: (NSURL *)url
            sourceApplication: (NSString *)sourceApplication
                   annotation: (id)annotation {
-    GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
 
     if ([gp isSigningIn]) {
         gp.isSigningIn = NO;
@@ -54,7 +54,7 @@ Fixes issue with G+ login window not closing correctly on ios 9
             openURL: (NSURL *)url
             options: (NSDictionary *)options
 {
-    GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
 
     if ([gp isSigningIn]) {
         gp.isSigningIn = NO;
@@ -97,7 +97,7 @@ Fixes issue with G+ login window not closing correctly on ios 9
  */
 - (GIDSignIn*) getGIDSignInObject:(CDVInvokedUrlCommand*)command {
     _callbackId = command.callbackId;
-    NSDictionary* options = [command.arguments objectAtIndex:0];
+    NSDictionary* options = command.arguments[0];
     NSString *reversedClientId = [self getreversedClientId];
 
     if (reversedClientId == nil) {
@@ -108,9 +108,9 @@ Fixes issue with G+ login window not closing correctly on ios 9
 
     NSString *clientId = [self reverseUrlScheme:reversedClientId];
 
-    NSString* scopesString = [options objectForKey:@"scopes"];
-    NSString* serverClientId = [options objectForKey:@"webClientId"];
-    BOOL offline = [options objectForKey:@"offline"];
+    NSString* scopesString = options[@"scopes"];
+    NSString* serverClientId = options[@"webClientId"];
+    BOOL offline = [options[@"offline"] boolValue];
 
 
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
@@ -143,11 +143,11 @@ Fixes issue with G+ login window not closing correctly on ios 9
 
   if (URLTypes != nil) {
     for (NSDictionary* dict in URLTypes) {
-      NSString *urlName = [dict objectForKey:@"CFBundleURLName"];
+      NSString *urlName = dict[@"CFBundleURLName"];
       if ([urlName isEqualToString:@"REVERSED_CLIENT_ID"]) {
-        NSArray* URLSchemes = [dict objectForKey:@"CFBundleURLSchemes"];
+        NSArray* URLSchemes = dict[@"CFBundleURLSchemes"];
         if (URLSchemes != nil) {
-          return [URLSchemes objectAtIndex:0];
+          return URLSchemes[0];
         }
       }
     }
