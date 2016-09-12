@@ -2,9 +2,6 @@
 by [Eddy Verbruggen](http://twitter.com/eddyverbruggen),
 with great assistance from Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
 
-*ATTENTION: The NPM registry currently returns an older version of this plugin. This README contains documentation for the most recent version.*
-*See [this version of the README](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/blob/886fda37764a6b253f1b1915e99deb03ff94bef4/README.md) for documentation on the npm version.*
-
 ## 0. Index
 
 1. [Description](#1-description)
@@ -268,9 +265,6 @@ You have a couple options when it comes to this exchange: you can use the Google
 As stated before, this plugin is all about user authentication and identity, so any use of the user's account beyond that needs to be implemented per use case, per application.
 
 ## 9. Troubleshooting
-- Q: After authentication I'm not redirected back to my app.
-- A: You probably changed the bundle id of your app after installing this plugin. Make sure that (on iOS) the `CFBundleURLTypes` bit in your `.plist` file is the same as the actual bundle id originating from `config.xml`.
-
 - Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
