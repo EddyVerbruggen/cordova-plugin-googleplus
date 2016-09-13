@@ -274,7 +274,7 @@ As stated before, this plugin is all about user authentication and identity, so 
 - A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
 
 ## 10. Changelog
-- 5.0.1: Require linking against `SafariServices` and `CoreText` frameworks on iOS as per Google's recommendation. Added `loginHint` on iOS.
+- 5.0.2: Require linking against `SafariServices` and `CoreText` frameworks on iOS as per Google's recommendation. Added `loginHint` on iOS.
 - 5.0.0: Android GoogleSignIn SDK (See #193), iOS SDK 4.0.0, iOS compatibility with Facebook authentication plugins, added `familyName` and `givenName`.
 - 4.0.8: Fix for Android 6 where it would crash while asking for permission. Thx #166!
 - 4.0.7: Re-added a missing framework for iOS. Thx #168!
