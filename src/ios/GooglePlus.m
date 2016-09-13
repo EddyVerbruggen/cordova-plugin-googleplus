@@ -110,11 +110,14 @@ Fixes issue with G+ login window not closing correctly on ios 9
 
     NSString* scopesString = options[@"scopes"];
     NSString* serverClientId = options[@"webClientId"];
+    NSString *loginHint = options[@"loginHint"];
     BOOL offline = [options[@"offline"] boolValue];
 
 
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
     signIn.clientID = clientId;
+
+    [signIn setLoginHint:loginHint];
 
     if (serverClientId != nil && offline) {
       signIn.serverClientID = serverClientId;
