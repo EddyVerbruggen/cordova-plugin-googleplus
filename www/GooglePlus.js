@@ -21,6 +21,10 @@ GooglePlus.prototype.disconnect = function (successCallback, errorCallback) {
   cordova.exec(successCallback, errorCallback, "GooglePlus", "disconnect", []);
 };
 
+GooglePlus.prototype.getSigningCertificateFingerprint = function (successCallback, errorCallback) {
+  cordova.exec(successCallback, errorCallback, "GooglePlus", "getSigningCertificateFingerprint", []);
+};
+
 GooglePlus.install = function () {
   if (!window.plugins) {
     window.plugins = {};

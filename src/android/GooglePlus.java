@@ -1,6 +1,8 @@
 package nl.xservices.plugins;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
@@ -17,6 +19,9 @@ import org.apache.cordova.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import android.content.pm.Signature;
+
 /**
  * Originally written by Eddy Verbruggen (http://github.com/EddyVerbruggen/cordova-plugin-googleplus)
  * Forked/Duplicated and Modified by PointSource, LLC, 2016.
@@ -28,6 +33,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public static final String ACTION_TRY_SILENT_LOGIN = "trySilentLogin";
     public static final String ACTION_LOGOUT = "logout";
     public static final String ACTION_DISCONNECT = "disconnect";
+    public static final String ACTION_GET_SIGNING_CERTIFICATE_FINGERPRINT = "getSigningCertificateFingerprint";
 
     //String options/config object names passed in to login and trySilentLogin
     public static final String ARGUMENT_WEB_CLIENT_ID = "webClientId";
@@ -50,22 +56,23 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
         this.savedCallbackContext = callbackContext;
 
-        //pass args into api client build
-        buildGoogleApiClient(args.optJSONObject(0));
-
-        Log.i(TAG, "Determining command to execute");
-
         if (ACTION_IS_AVAILABLE.equals(action)) {
             final boolean avail = true;
             savedCallbackContext.success("" + avail);
 
         } else if (ACTION_LOGIN.equals(action)) {
+            //pass args into api client build
+            buildGoogleApiClient(args.optJSONObject(0));
+
             // Tries to Log the user in
             Log.i(TAG, "Trying to Log in!");
             cordova.setActivityResultCallback(this); //sets this class instance to be an activity result listener
             signIn();
 
         } else if (ACTION_TRY_SILENT_LOGIN.equals(action)) {
+            //pass args into api client build
+            buildGoogleApiClient(args.optJSONObject(0));
+
             Log.i(TAG, "Trying to do silent login!");
             trySilentLogin();
 
@@ -76,6 +83,9 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
         } else if (ACTION_DISCONNECT.equals(action)) {
             Log.i(TAG, "Trying to disconnect the user");
             disconnect();
+
+        } else if (ACTION_GET_SIGNING_CERTIFICATE_FINGERPRINT.equals(action)) {
+            getSigningCertificateFingerprint();
 
         } else {
             Log.i(TAG, "This action doesn't exist");
@@ -90,19 +100,15 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      * @param clientOptions - the options object passed in the login function
      */
     private synchronized void buildGoogleApiClient(JSONObject clientOptions) throws JSONException {
-        //If options have been passed in, they could be different, so force a rebuild of the client
-        if (clientOptions != null) {
-            // disconnect old client iff it exists
-            if (this.mGoogleApiClient != null) this.mGoogleApiClient.disconnect();
-            // nullify
-            this.mGoogleApiClient = null;
-        }
-
-        //determine the state of the GoogleApiClient
-        if (this.mGoogleApiClient != null) {
-            //don't go any further. client is already built.
+        if (clientOptions == null) {
             return;
         }
+
+        //If options have been passed in, they could be different, so force a rebuild of the client
+        // disconnect old client iff it exists
+        if (this.mGoogleApiClient != null) this.mGoogleApiClient.disconnect();
+        // nullify
+        this.mGoogleApiClient = null;
 
         Log.i(TAG, "Building Google options");
 
@@ -314,6 +320,38 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             } catch (JSONException e) {
                 savedCallbackContext.error("Trouble parsing result, error: " + e.getMessage());
             }
+        }
+    }
+
+    private void getSigningCertificateFingerprint() {
+        String packageName = webView.getContext().getPackageName();
+        int flags = PackageManager.GET_SIGNATURES;
+        PackageManager pm = webView.getContext().getPackageManager();
+        try {
+            PackageInfo packageInfo = pm.getPackageInfo(packageName, flags);
+            Signature[] signatures = packageInfo.signatures;
+            byte[] cert = signatures[0].toByteArray();
+
+            String strResult = "";
+            MessageDigest md;
+            md = MessageDigest.getInstance("SHA1");
+            md.update(cert);
+            for (byte b : md.digest()) {
+                String strAppend = Integer.toString(b & 0xff, 16);
+                if (strAppend.length() == 1) {
+                    strResult += "0";
+                }
+                strResult += strAppend;
+                strResult += ":";
+            }
+            // strip the last ':'
+            strResult = strResult.substring(0, strResult.length()-1);
+            strResult = strResult.toUpperCase();
+            this.savedCallbackContext.success(strResult);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            savedCallbackContext.error(e.getMessage());
         }
     }
 }
