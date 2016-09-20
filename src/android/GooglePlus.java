@@ -181,6 +181,11 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      * Signs the user out from the client
      */
     private void signOut() {
+        if (this.mGoogleApiClient == null) {
+            savedCallbackContext.error("Please use login or trySilentLogin before logging out");
+            return;
+        }
+
         ConnectionResult apiConnect = mGoogleApiClient.blockingConnect();
 
         if (apiConnect.isSuccess()) {
@@ -204,6 +209,11 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      * Disconnects the user and revokes access
      */
     private void disconnect() {
+        if (this.mGoogleApiClient == null) {
+            savedCallbackContext.error("Please use login or trySilentLogin before disconnecting");
+            return;
+        }
+
         ConnectionResult apiConnect = mGoogleApiClient.blockingConnect();
 
         if (apiConnect.isSuccess()) {

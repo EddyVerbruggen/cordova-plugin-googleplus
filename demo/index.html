@@ -75,6 +75,9 @@
         function (msg) {
           document.querySelector("#image").style.visibility = 'hidden';
           document.querySelector("#feedback").innerHTML = msg;
+        },
+        function (msg) {
+          document.querySelector("#feedback").innerHTML = msg;
         }
     );
   }
@@ -83,6 +86,9 @@
     window.plugins.googleplus.disconnect(
         function (msg) {
           document.querySelector("#image").style.visibility = 'hidden';
+          document.querySelector("#feedback").innerHTML = msg;
+        },
+        function (msg) {
           document.querySelector("#feedback").innerHTML = msg;
         }
     );
