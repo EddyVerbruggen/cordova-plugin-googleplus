@@ -1,4 +1,4 @@
-console.error("START Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
+console.log("START Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
 
 var xcode = require('xcode'),
     fs = require('fs'),
@@ -16,7 +16,6 @@ module.exports = function (context) {
 
   var iosPlatform = path.join(context.opts.projectRoot, 'platforms/ios/');
   var iosFolder = fs.existsSync(iosPlatform) ? iosPlatform : context.opts.projectRoot;
-  console.log("iosFolder: " + iosFolder);
 
   fs.readdir(iosFolder, function (err, data) {
     if (err) {
@@ -52,8 +51,6 @@ module.exports = function (context) {
       var projectPlistPath = path.join(iosFolder, projName, util.format('%s-Info.plist', projName));
       var projectPlistJson = plist.parse(fs.readFileSync(projectPlistPath, 'utf8'));
       var bundleID = projectPlistJson.CFBundleIdentifier;
-      console.log("KeychainSharingBundleID: " + bundleID);
-
 
       // create a new entitlements plist file
       var sourceFile = path.join(context.opts.plugin.pluginInfo.dir, 'src/ios/resources/KeychainSharing.entitlements');
@@ -83,9 +80,8 @@ module.exports = function (context) {
         }
 
         // write the updated project file
-        console.log("---- writing updated project file to: " + projectPath);
         fs.writeFileSync(projectPath, pbxProject.writeSync());
-        console.error("END Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
+        console.log("END Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
 
         deferral.resolve();
       });
