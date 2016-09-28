@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="5.0.3">
+        version="5.1.0">
 
   <name>Google SignIn</name>
 
@@ -19,7 +19,7 @@
   <issue>https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues</issue>
 
   <engines>
-    <engine name="cordova" version=">=3.3.0"/>
+    <engine name="cordova" version=">=3.5.0"/>
   </engines>
 
   <js-module src="www/GooglePlus.js" name="GooglePlus">
@@ -92,9 +92,13 @@
     <framework src="AddressBook.framework" weak="true" />
     <framework src="CoreText.framework" weak="true" />
     <framework src="SafariServices.framework" weak="true" />
+    <framework src="Security.framework" weak="true" />
     <framework src="SystemConfiguration.framework" weak="true" />
     <framework src="libz.tbd" weak="true" />
     <framework src="libz.dylib" weak="true" />
+
+		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
+		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
 </plugin>

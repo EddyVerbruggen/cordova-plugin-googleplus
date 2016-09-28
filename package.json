@@ -1,5 +1,5 @@
 {
-  "version": "5.0.3",
+  "version": "5.1.0",
   "name": "cordova-plugin-googleplus",
   "cordova_name": "Google SignIn",
   "description": "Use your Google account to authenticate with the app.",
@@ -9,6 +9,7 @@
   "keywords": [
     "Google",
     "Google SignIn",
+    "Google Sign In",
     "GoogleSignIn",
     "Google Login",
     "Google Plus",
@@ -27,7 +28,7 @@
   "engines": [
     {
       "name": "cordova",
-      "version": ">=3.3.0"
+      "version": ">=3.5.0"
     }
   ]
 }
