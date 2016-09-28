@@ -1,5 +1,4 @@
-// using error to see if this shows up in AB
-console.error("Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
+console.error("START Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
 
 var xcode = require('xcode'),
     fs = require('fs'),
@@ -44,6 +43,8 @@ module.exports = function (context) {
     var destFile = path.join(iosFolder, projName, 'Resources', projName + '.entitlements');
     if (fs.existsSync(destFile)) {
       console.error("File exists, not doing anything: " + destFile);
+      deferral.resolve();
+
     } else {
       console.log("Will add iOS Keychain Sharing entitlements to project '" + projName + "'");
 
@@ -82,8 +83,9 @@ module.exports = function (context) {
         }
 
         // write the updated project file
+        console.log("---- writing updated project file to: " + projectPath);
         fs.writeFileSync(projectPath, pbxProject.writeSync());
-        console.warn("OK, added iOS Keychain Sharing entitlements to project '" + projName + "'");
+        console.error("END Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
 
         deferral.resolve();
       });
