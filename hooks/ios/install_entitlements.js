@@ -39,7 +39,12 @@ module.exports = function (context) {
       throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
     }
 
-    var destFile = path.join(iosFolder, projName, 'Resources', projName + '.entitlements');
+    var destFolder = path.join(iosFolder, projName, 'Resources');
+    if (!fs.existsSync(destFolder)) {
+      fs.mkdirSync(destFolder);
+    }
+
+    var destFile = path.join(destFolder, projName + '.entitlements');
     if (fs.existsSync(destFile)) {
       console.error("File exists, not doing anything: " + destFile);
       deferral.resolve();
