@@ -39,6 +39,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public static final String ARGUMENT_WEB_CLIENT_ID = "webClientId";
     public static final String ARGUMENT_SCOPES = "scopes";
     public static final String ARGUMENT_OFFLINE_KEY = "offline";
+    public static final String ARGUMENT_HOSTED_DOMAIN = "hostedDomain";
 
     public static final String TAG = "GooglePlugin";
     public static final int RC_GOOGLEPLUS = 77552; // Request Code to identify our plugin's activities
@@ -141,6 +142,14 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             if (clientOptions.optBoolean(ARGUMENT_OFFLINE_KEY, false)) {
                 gso.requestServerAuthCode(webClientId, false);
             }
+        }
+
+        // Try to get hosted domain
+        String hostedDomain = clientOptions.optString(ARGUMENT_HOSTED_DOMAIN, null);
+
+        // if hostedDomain included, we'll request a hosted domain account
+        if (hostedDomain != null && !hostedDomain.isEmpty()) {
+            gso.setHostedDomain(hostedDomain);
         }
 
         //Now that we have our options, let's build our Client
