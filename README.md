@@ -84,6 +84,7 @@ This plugin is compatible with:
 * [Cordova Plugman](https://github.com/apache/cordova-plugman)
 * [PhoneGap 3.0 CLI](http://docs.phonegap.com/en/3.0.0/guide_cli_index.md.html#The%20Command-line%20Interface_add_features)
 * [Ionic](http://ionic.io/) ***(must use the Cordova CLI)***
+* [Meteor JS](https://atmospherejs.com/hedcet/cordova-google-plus-native-sign-in)
 
 Here's how it works (backup your project first!):
 
