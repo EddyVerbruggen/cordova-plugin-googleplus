@@ -104,7 +104,7 @@ IMPORTANT:
 
 * _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
 
-* _If you are building a hybrid application **(iOS and Android)**, or an Android application, you have to replace `myreversedclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes. Example: '123-abc12.apps.googleusercontent.com' becomes 'com.googleusercontent.apps.abc12-123'._
+* _If you are building a hybrid application **(iOS and Android)**, or an Android application, you have to replace `myreversedclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes. Example: '123-abc123.apps.googleusercontent.com' becomes 'com.googleusercontent.apps.123-abc123'._
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
 
