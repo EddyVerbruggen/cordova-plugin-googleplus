@@ -1,8 +1,16 @@
 package nl.xservices.plugins;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.auth.api.Auth;
@@ -16,11 +24,17 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.api.Scope;
 
 import org.apache.cordova.*;
+import org.apache.cordova.engine.SystemWebChromeClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import android.content.pm.Signature;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Originally written by Eddy Verbruggen (http://github.com/EddyVerbruggen/cordova-plugin-googleplus)
@@ -35,6 +49,11 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public static final String ACTION_DISCONNECT = "disconnect";
     public static final String ACTION_GET_SIGNING_CERTIFICATE_FINGERPRINT = "getSigningCertificateFingerprint";
 
+    private final static String KAccess_Token   = "access_token";
+    private final static String KTokenExpires   = "expires";
+
+    private final static String KVerifyTokenUrl = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
+
     //String options/config object names passed in to login and trySilentLogin
     public static final String ARGUMENT_WEB_CLIENT_ID = "webClientId";
     public static final String ARGUMENT_SCOPES = "scopes";
@@ -43,6 +62,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
 
     public static final String TAG = "GooglePlugin";
     public static final int RC_GOOGLEPLUS = 77552; // Request Code to identify our plugin's activities
+    public static final int KAssumeStaleTokenSec = 60;
 
     // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
     private GoogleApiClient mGoogleApiClient;
@@ -295,7 +315,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
      *
      * @param signInResult - the GoogleSignInResult object retrieved in the onActivityResult method.
      */
-    private void handleSignInResult(GoogleSignInResult signInResult) {
+    private void handleSignInResult(final GoogleSignInResult signInResult) {
         if (this.mGoogleApiClient == null) {
             savedCallbackContext.error("GoogleApiClient was never initialized");
             return;
@@ -314,31 +334,32 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             //Return the status code to be handled client side
             savedCallbackContext.error(signInResult.getStatus().getStatusCode());
         } else {
-            GoogleSignInAccount acct = signInResult.getSignInAccount();
-
-            JSONObject result = new JSONObject();
-
-            try {
-                Log.i(TAG, "trying to get account information");
-
-                result.put("email", acct.getEmail());
-
-                //only gets included if requested (See Line 164).
-                result.put("idToken", acct.getIdToken());
-
-                //only gets included if requested (See Line 166).
-                result.put("serverAuthCode", acct.getServerAuthCode());
-
-                result.put("userId", acct.getId());
-                result.put("displayName", acct.getDisplayName());
-                result.put("familyName", acct.getFamilyName());
-                result.put("givenName", acct.getGivenName());
-                result.put("imageUrl", acct.getPhotoUrl());
-
-                this.savedCallbackContext.success(result);
-            } catch (JSONException e) {
-                savedCallbackContext.error("Trouble parsing result, error: " + e.getMessage());
-            }
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... params) {
+                    GoogleSignInAccount acct = signInResult.getSignInAccount();
+                    JSONObject result = new JSONObject();
+                    try {
+                        JSONObject accessTokenBundle = getAuthToken(
+                            cordova.getActivity(), acct.getAccount(), true
+                        );
+                        result.put(KAccess_Token, accessTokenBundle.get(KAccess_Token));
+                        result.put(KTokenExpires, accessTokenBundle.get(KTokenExpires));
+                        result.put("email", acct.getEmail());
+                        result.put("idToken", acct.getIdToken());
+                        result.put("serverAuthCode", acct.getServerAuthCode());
+                        result.put("userId", acct.getId());
+                        result.put("displayName", acct.getDisplayName());
+                        result.put("familyName", acct.getFamilyName());
+                        result.put("givenName", acct.getGivenName());
+                        result.put("imageUrl", acct.getPhotoUrl());
+                        savedCallbackContext.success(result);
+                    } catch (Exception e) {
+                        savedCallbackContext.error("Trouble obtaining result, error: " + e.getMessage());
+                    }
+                    return null;
+                }
+            }.execute();
         }
     }
 
@@ -372,5 +393,52 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             e.printStackTrace();
             savedCallbackContext.error(e.getMessage());
         }
+    }
+
+    private JSONObject getAuthToken(Activity activity, Account account, boolean retry) throws Exception {
+        AccountManager manager = AccountManager.get(activity);
+        AccountManagerFuture<Bundle> future = manager.getAuthToken(account, "oauth2:profile email", null, activity, null, null);
+        Bundle bundle = future.getResult();
+        String authToken = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+        try {
+            return verifyToken(authToken);
+        } catch (IOException e) {
+            if (retry) {
+                manager.invalidateAuthToken("com.google", authToken);
+                return getAuthToken(activity, account, false);
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private JSONObject verifyToken(String authToken) throws IOException, JSONException {
+        OkHttpClient client = client = new OkHttpClient.Builder().build();
+        Request request = new Request.Builder()
+            .url(KVerifyTokenUrl+authToken)
+            .get().build();
+        Response response = client.newCall(request).execute();
+            /* expecting:
+            {
+                "issued_to": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
+                "audience": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
+                "user_id": "107046534809469736555",
+                "scope": "https://www.googleapis.com/auth/userinfo.profile",
+                "expires_in": 3595,
+                "access_type": "offline"
+            }*/
+
+        String stringResponse = response.body().string();
+        Log.d("AuthenticatedBackend", "token: " + authToken + ", verification: " + stringResponse);
+        JSONObject jsonResponse = new JSONObject(
+            stringResponse
+        );
+        int expires_in = jsonResponse.getInt("expires_in");
+        if (expires_in < KAssumeStaleTokenSec) {
+            throw new IOException("Auth token soon expiring.");
+        }
+        jsonResponse.put(KAccess_Token, authToken);
+        jsonResponse.put(KTokenExpires, expires_in + (System.currentTimeMillis()/1000));
+        return jsonResponse;
     }
 }
