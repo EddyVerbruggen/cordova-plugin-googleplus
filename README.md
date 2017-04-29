@@ -65,7 +65,7 @@ Login on iOS takes the user to a [SafariViewController](https://developer.apple.
 ### Android
 To configure Android, [generate a configuration file here](https://developers.google.com/mobile/add?platform=android&cntapi=signin). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console. There is no need to add the generated google-services.json file into your cordova project.
 
-Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/android/guides/client-auth) or authentication will fail.
+Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/drive/android/auth) or authentication will fail (do this for both release and debug keystores).
 
 IMPORTANT:
 * The step above, about `keytool`, show 2 types of certificate fingerprints, the **Release** and the **Debug**, when generating the configuration file, it's better to use the **Debug** certificate fingerprint, after that, you have to go on [Google Credentials Manager](https://console.developers.google.com/apis/credentials), and manually create a credential for **OAuth2 client** with your **Release** certificate fingerprint. This is necessary to your application work on both Development and Production releases.
@@ -148,7 +148,7 @@ function deviceReady() {
 
 The login function walks the user through the Google Auth process. All parameters are optional, however there are a few caveats.
 
-To get an `idToken` on Android, you ***must*** pass in your `webClientId`. On iOS, the `idToken` is included in the sign in result by default.
+To get an `idToken` on Android, you ***must*** pass in your `webClientId` (a frequent mistake is to supply Android Client ID). On iOS, the `idToken` is included in the sign in result by default.
 
 To get a `serverAuthCode`, you must pass in your `webClientId` _and_ set `offline` to true. If offline is true, but no webClientId is provided, the `serverAuthCode` will _**NOT**_ be requested.
 
@@ -183,6 +183,7 @@ The success callback (second argument) gets a JSON object with the following con
  obj.imageUrl       // 'http://link-to-my-profilepic.google.com'
  obj.idToken        // idToken that can be exchanged to verify user identity.
  obj.serverAuthCode // Auth code that can be exchanged for an access token and refresh token for offline access
+ obj.accessToken    // OAuth2 access token
 ```
 
 Additional user information is available by use case. Add the scopes needed to the scopes option then return the info to the result object being created in the `handleSignInResult` and `didSignInForUser` functions on Android and iOS, respectively.

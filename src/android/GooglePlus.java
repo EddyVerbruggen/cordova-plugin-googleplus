@@ -28,13 +28,15 @@ import org.apache.cordova.engine.SystemWebChromeClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import android.content.pm.Signature;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Originally written by Eddy Verbruggen (http://github.com/EddyVerbruggen/cordova-plugin-googleplus)
@@ -49,10 +51,10 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public static final String ACTION_DISCONNECT = "disconnect";
     public static final String ACTION_GET_SIGNING_CERTIFICATE_FINGERPRINT = "getSigningCertificateFingerprint";
 
-    private final static String KAccess_Token   = "access_token";
-    private final static String KTokenExpires   = "expires";
-
-    private final static String KVerifyTokenUrl = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
+    private final static String FIELD_ACCESS_TOKEN      = "accessToken";
+    private final static String FIELD_TOKEN_EXPIRES     = "expires";
+    private final static String FIELD_TOKEN_EXPIRES_IN  = "expires_in";
+    private final static String VERIFY_TOKEN_URL        = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=";
 
     //String options/config object names passed in to login and trySilentLogin
     public static final String ARGUMENT_WEB_CLIENT_ID = "webClientId";
@@ -343,8 +345,9 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
                         JSONObject accessTokenBundle = getAuthToken(
                             cordova.getActivity(), acct.getAccount(), true
                         );
-                        result.put(KAccess_Token, accessTokenBundle.get(KAccess_Token));
-                        result.put(KTokenExpires, accessTokenBundle.get(KTokenExpires));
+                        result.put(FIELD_ACCESS_TOKEN, accessTokenBundle.get(FIELD_ACCESS_TOKEN));
+                        result.put(FIELD_TOKEN_EXPIRES, accessTokenBundle.get(FIELD_TOKEN_EXPIRES));
+                        result.put(FIELD_TOKEN_EXPIRES_IN, accessTokenBundle.get(FIELD_TOKEN_EXPIRES_IN));
                         result.put("email", acct.getEmail());
                         result.put("idToken", acct.getIdToken());
                         result.put("serverAuthCode", acct.getServerAuthCode());
@@ -413,32 +416,43 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     }
 
     private JSONObject verifyToken(String authToken) throws IOException, JSONException {
-        OkHttpClient client = client = new OkHttpClient.Builder().build();
-        Request request = new Request.Builder()
-            .url(KVerifyTokenUrl+authToken)
-            .get().build();
-        Response response = client.newCall(request).execute();
-            /* expecting:
-            {
-                "issued_to": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
-                "audience": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
-                "user_id": "107046534809469736555",
-                "scope": "https://www.googleapis.com/auth/userinfo.profile",
-                "expires_in": 3595,
-                "access_type": "offline"
-            }*/
+        URL url = new URL(VERIFY_TOKEN_URL+authToken);
+        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        urlConnection.setInstanceFollowRedirects(true);
+        String stringResponse = fromStream(
+            new BufferedInputStream(urlConnection.getInputStream())
+        );
+        /* expecting:
+        {
+            "issued_to": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
+            "audience": "608941808256-43vtfndets79kf5hac8ieujto8837660.apps.googleusercontent.com",
+            "user_id": "107046534809469736555",
+            "scope": "https://www.googleapis.com/auth/userinfo.profile",
+            "expires_in": 3595,
+            "access_type": "offline"
+        }*/
 
-        String stringResponse = response.body().string();
         Log.d("AuthenticatedBackend", "token: " + authToken + ", verification: " + stringResponse);
         JSONObject jsonResponse = new JSONObject(
             stringResponse
         );
-        int expires_in = jsonResponse.getInt("expires_in");
+        int expires_in = jsonResponse.getInt(FIELD_TOKEN_EXPIRES_IN);
         if (expires_in < KAssumeStaleTokenSec) {
             throw new IOException("Auth token soon expiring.");
         }
-        jsonResponse.put(KAccess_Token, authToken);
-        jsonResponse.put(KTokenExpires, expires_in + (System.currentTimeMillis()/1000));
+        jsonResponse.put(FIELD_ACCESS_TOKEN, authToken);
+        jsonResponse.put(FIELD_TOKEN_EXPIRES, expires_in + (System.currentTimeMillis()/1000));
         return jsonResponse;
+    }
+
+    public static String fromStream(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        reader.close();
+        return sb.toString();
     }
 }
