@@ -62,10 +62,8 @@ Fixes issue with G+ login window not closing correctly on ios 9
             sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
             annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
     } else {
-        // Other
-        return [self application:app openURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+        // call super
+        return [self indentity_application_options:app openURL:url options:options];
     }
 }
 @end
