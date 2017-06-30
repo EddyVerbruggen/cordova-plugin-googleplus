@@ -125,6 +125,13 @@ For the Git version:
 </gap:plugin>
 ```
 
+For the Git version with cordova:
+```xml
+<plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git">
+    <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+</plugin>
+```
+
 ## 6. Usage
 Check the [demo app](demo) to get you going quickly, or hurt yourself and follow these steps.
 
