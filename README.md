@@ -111,25 +111,18 @@ GooglePlus.js is brought in automatically. There is no need to change or add any
 ## 5. Installation (PhoneGap Build)
 Add this to your config.xml:
 
-For the NPM Version:
+For the (stable) NPM Version:
 ```xml
-<gap:plugin name="cordova-plugin-googleplus" source="npm">
-  <param name="REVERSED_CLIENT_ID" value="myreversedclientid" />
-</gap:plugin>
-```
-
-For the Git version:
-```xml
-<gap:plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git" source="git">
-    <param name="REVERSED_CLIENT_ID" value="myreversedclientid" />
-</gap:plugin>
-```
-
-For the Git version with cordova:
-```xml
-<plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git">
-    <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+<plugin name="cordova-plugin-googleplus" source="npm">
+  <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
 </plugin>
+```
+
+For the latest version from Git (not recommended):
+```xml
+<plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git" source="git">
+  <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+<plugin>
 ```
 
 ## 6. Usage
