@@ -24,21 +24,24 @@ var GooglePlusProxy = {
 
             var profile = user.getBasicProfile();
             var authResponse = user.getAuthResponse(true);
-            success({
-                "accessToken": authResponse['access_token'],
-                "expires": authResponse['expires_at'],
-                "expires_in": authResponse['expires_in'],
-                "idToken": authResponse['id_token'],
-                "serverAuthCode": authResponse['server_auth_code'],
-                "email": profile.getEmail(),
-                "userId": profile.getId(),
-                "displayName": profile.getName(),
-                "familyName": profile.getFamilyName(),
-                "givenName": profile.getGivenName(),
-                "imageUrl": profile.getImageUrl()
-            });
+            if (success) {
+                success({
+                    "accessToken": authResponse['access_token'],
+                    "expires": authResponse['expires_at'],
+                    "expires_in": authResponse['expires_in'],
+                    "idToken": authResponse['id_token'],
+                    "serverAuthCode": authResponse['server_auth_code'],
+                    "email": profile.getEmail(),
+                    "userId": profile.getId(),
+                    "displayName": profile.getName(),
+                    "familyName": profile.getFamilyName(),
+                    "givenName": profile.getGivenName(),
+                    "imageUrl": profile.getImageUrl()
+                });
+            }
+
         } else {
-            error({'error': 'User not logged in.'});
+            if (error) error({'error': 'User not logged in.'});
         }
     },
 
