@@ -101,4 +101,20 @@
 		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
+  <!-- browser -->
+  <platform name="browser">
+    <js-module src="src/browser/GooglePlusProxy.js" name="GooglePlusProxy">
+      <clobbers target="GooglePlus" />
+    </js-module>
+    <config-file target="config.xml" parent="/*">
+      <feature name="GooglePlus">
+        <param name="onload" value="true" />
+      </feature>
+      <access origin="https://accounts.google.com/*" />
+    </config-file>
+
+    <!-- after_prepare hook to populate APP_ID -->
+    <hook type="after_prepare" src="hooks/browser/after_prepare.js" />
+  </platform>
+
 </plugin>
