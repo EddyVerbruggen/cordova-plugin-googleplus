@@ -11,18 +11,14 @@ var getPreferenceValue = function(config, name) {
         return null
     }
 };
-var CLIENT_ID = '';
-var REVERSED_CLIENT_ID = '';
 
-if(process.argv.join("|").indexOf("REVERSED_CLIENT_ID=") > -1) {
-    REVERSED_CLIENT_ID = process.argv.join("|").match(/REVERSED_CLIENT_ID=(.*?)(\||$)/)[1]
+var WEB_APPLICATION_CLIENT_ID = '';
+
+if(process.argv.join("|").indexOf("WEB_APPLICATION_CLIENT_ID=") > -1) {
+    WEB_APPLICATION_CLIENT_ID = process.argv.join("|").match(/WEB_APPLICATION_CLIENT_ID=(.*?)(\||$)/)[1]
 } else {
     var config = fs.readFileSync("config.xml").toString();
-    REVERSED_CLIENT_ID = getPreferenceValue(config, "REVERSED_CLIENT_ID");
-}
-
-if (REVERSED_CLIENT_ID !== '') {
-    CLIENT_ID = REVERSED_CLIENT_ID.split('.').reverse().join('.');
+    WEB_APPLICATION_CLIENT_ID = getPreferenceValue(config, "WEB_APPLICATION_CLIENT_ID");
 }
 
 var files = [
@@ -33,6 +29,6 @@ var files = [
 for(var i=0; i<files.length; i++) {
     try {
         var contents = fs.readFileSync(files[i]).toString();
-        fs.writeFileSync(files[i], contents.replace(/CLIENT_ID/g, '"' + CLIENT_ID + '"'));
+        fs.writeFileSync(files[i], contents.replace(/WEB_APPLICATION_CLIENT_ID/g, WEB_APPLICATION_CLIENT_ID));
     } catch(err) {}
 }

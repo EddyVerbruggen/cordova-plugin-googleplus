@@ -55,7 +55,9 @@ This step is _especially_ important if you are using a framework such as Ionic t
 ```
 
 ### Browser
-Browser platfor require a valid `REVERSED_CLIENT_ID` as same as *iOS* platform. See [iOS setup](#ios) below for more detail.
+Browser platform require a valid `WEB_APPLICATION_CLIENT_ID` that generated at [Google Developer Console](https://console.developers.google.com/).
+Ensure you have added your url address (example: `http://localhost:3000`) to **Authorized JavaScript origins** section.
+See [this screenshot for example](http://pix.toile-libre.org/upload/original/1508064473.png)
 
 ### iOS
 To get your iOS `REVERSED_CLIENT_ID`, [generate a configuration file here](https://developers.google.com/mobile/add?platform=ios&cntapi=signin).
@@ -93,21 +95,21 @@ Here's how it works (backup your project first!):
 
 Using the Cordova CLI and [npm](https://www.npmjs.com/package/cordova-plugin-googleplus):
 ```
-$ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova plugin add cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid --variable WEB_APPLICATION_CLIENT_ID=mywebapplicationclientid
 $ cordova prepare
 ```
 
 Using the Cordova CLI to fetch the latest version from GitHub:
 ```
-$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid
+$ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus --save --variable REVERSED_CLIENT_ID=myreversedclientid  --variable WEB_APPLICATION_CLIENT_ID=mywebapplicationclientid
 $ cordova prepare
 ```
 
 IMPORTANT:
 
-* _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
+* _Please note that `myreversedclientid` and `mywebapplicationclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
 
-* _If you are building a hybrid application **(Browser, iOS and Android)**, or an Android application, you have to replace `myreversedclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes._
+* _If you are building a hybrid application **(Browser, iOS and Android)**, or an Android application, you have to replace `myreversedclientid` and `mywebapplicationclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes._
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
 
@@ -118,6 +120,7 @@ For the (stable) NPM Version:
 ```xml
 <plugin name="cordova-plugin-googleplus" source="npm">
   <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+  <variable name="WEB_APPLICATION_CLIENT_ID" value="mywebapplicationclientid" />
 </plugin>
 ```
 
@@ -125,6 +128,7 @@ For the latest version from Git (not recommended):
 ```xml
 <plugin spec="https://github.com/EddyVerbruggen/cordova-plugin-googleplus.git" source="git">
   <variable name="REVERSED_CLIENT_ID" value="myreversedclientid" />
+  <variable name="WEB_APPLICATION_CLIENT_ID" value="mywebapplicationclientid" />
 <plugin>
 ```
 

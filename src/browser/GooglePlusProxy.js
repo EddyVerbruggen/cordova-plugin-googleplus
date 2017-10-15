@@ -106,7 +106,7 @@ if (window.location.protocol === "file:") {
     window.handleClientLoad = function() {
         gapi.load('auth2', function () {
             gapi.auth2.init({
-                client_id: CLIENT_ID // CLIENT_ID is populated by the cordova after_prepare hook
+                client_id: "WEB_APPLICATION_CLIENT_ID" // CLIENT_ID is populated by the cordova after_prepare hook
             }).then(function () {
                 __googleSdkReady = true;
 
@@ -116,6 +116,9 @@ if (window.location.protocol === "file:") {
 
                 // Listen for sign-in state changes.
                 gapi.auth2.getAuthInstance().isSignedIn.listen(GooglePlusProxy.updateSigninStatus);
+            }, function(error) {
+                console.error("Could not load WEB\_APPLICATION\_CLIENT_ID in your config.xml");               
+                console.error(error);
             });
         });
     };
