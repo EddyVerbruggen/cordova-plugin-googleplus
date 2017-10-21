@@ -19,9 +19,13 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 @implementation AppDelegate (IdentityUrlHandling)
 
 + (void)load {
-  swizzleMethod([AppDelegate class],
+    swizzleMethod([AppDelegate class],
                 @selector(application:openURL:sourceApplication:annotation:),
                 @selector(identity_application:openURL:sourceApplication:annotation:));
+
+    swizzleMethod([AppDelegate class],
+                @selector(application:openURL:options:),
+                @selector(indentity_application_options:openURL:options:));
 }
 
 /** Google Sign-In SDK
@@ -31,7 +35,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                      openURL: (NSURL *)url
            sourceApplication: (NSString *)sourceApplication
                   annotation: (id)annotation {
-    GooglePlus* gp = (GooglePlus*)[[self.viewController pluginObjects] objectForKey:@"GooglePlus"];
+    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
 
     if ([gp isSigningIn]) {
         gp.isSigningIn = NO;
@@ -39,6 +43,29 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
     } else {
         // call super
         return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+    }
+}
+
+/**
+From https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/227#issuecomment-227674026
+Fixes issue with G+ login window not closing correctly on ios 9
+*/
+- (BOOL)indentity_application_options: (UIApplication *)app
+            openURL: (NSURL *)url
+            options: (NSDictionary *)options
+{
+    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
+
+    if ([gp isSigningIn]) {
+        gp.isSigningIn = NO;
+        return [[GIDSignIn sharedInstance] handleURL:url
+            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+    } else {
+        // Other
+        return [self application:app openURL:url
+            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
     }
 }
 @end
@@ -70,7 +97,7 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
  */
 - (GIDSignIn*) getGIDSignInObject:(CDVInvokedUrlCommand*)command {
     _callbackId = command.callbackId;
-    NSDictionary* options = [command.arguments objectAtIndex:0];
+    NSDictionary* options = command.arguments[0];
     NSString *reversedClientId = [self getreversedClientId];
 
     if (reversedClientId == nil) {
@@ -81,19 +108,26 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 
     NSString *clientId = [self reverseUrlScheme:reversedClientId];
 
-    NSString* scopesString = [options objectForKey:@"scopes"];
-    NSString* serverClientId = [options objectForKey:@"webClientId"];
-    BOOL offline = [options objectForKey:@"offline"];
+    NSString* scopesString = options[@"scopes"];
+    NSString* serverClientId = options[@"webClientId"];
+    NSString *loginHint = options[@"loginHint"];
+    BOOL offline = [options[@"offline"] boolValue];
+    NSString* hostedDomain = options[@"hostedDomain"];
 
 
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
     signIn.clientID = clientId;
 
+    [signIn setLoginHint:loginHint];
+
     if (serverClientId != nil && offline) {
       signIn.serverClientID = serverClientId;
     }
+    
+    if (hostedDomain != nil) {
+        signIn.hostedDomain = hostedDomain;
+    }
 
-    signIn.allowsSignInWithBrowser = NO; // Otherwise your app get rejected
     signIn.uiDelegate = self;
     signIn.delegate = self;
 
@@ -102,8 +136,6 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
         NSArray* scopes = [scopesString componentsSeparatedByString:@" "];
         [signIn setScopes:scopes];
     }
-    [signIn setAllowsSignInWithBrowser:NO]; // disabling as this may be a rejection reason for Apple
-    [signIn setAllowsSignInWithWebView:YES]; // assuming this should be fine
     return signIn;
 }
 
@@ -119,11 +151,11 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
 
   if (URLTypes != nil) {
     for (NSDictionary* dict in URLTypes) {
-      NSString *urlName = [dict objectForKey:@"CFBundleURLName"];
+      NSString *urlName = dict[@"CFBundleURLName"];
       if ([urlName isEqualToString:@"REVERSED_CLIENT_ID"]) {
-        NSArray* URLSchemes = [dict objectForKey:@"CFBundleURLSchemes"];
+        NSArray* URLSchemes = dict[@"CFBundleURLSchemes"];
         if (URLSchemes != nil) {
-          return [URLSchemes objectAtIndex:0];
+          return URLSchemes[0];
         }
       }
     }
@@ -170,7 +202,9 @@ static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelect
                        @"accessToken"     : accessToken,
                        @"refreshToken"    : refreshToken,
                        @"userId"          : userId,
-                       @"displayName"     : user.profile.name ? : [NSNull null],
+                       @"displayName"     : user.profile.name       ? : [NSNull null],
+                       @"givenName"       : user.profile.givenName  ? : [NSNull null],
+                       @"familyName"      : user.profile.familyName ? : [NSNull null],
                        @"imageUrl"        : imageUrl ? imageUrl.absoluteString : [NSNull null],
                        };
 

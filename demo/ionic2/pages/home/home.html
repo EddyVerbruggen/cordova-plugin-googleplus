@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic Blank
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+<ion-buttons end>
+  <button ion-button icon-only (click)="addSong()" [hidden]="!(af.auth | async)">
+    <ion-icon name="add"></ion-icon>
+  </button>
+</ion-buttons>
+<ion-list>
+  <ion-item *ngFor="let song of songs | async" (click)="showOptions(song.$key, song.title)">
+    {{song.title}}
+  </ion-item>
+</ion-list>
+
+<div [hidden]="!(af.auth | async)">Hi {{ user.auth?.email }} <button ion-button outline (click)="logout()">Logout</button> </div>
+<div [hidden]="af.auth | async"><button ion-button outline (click)="login()">Login</button></div>
+
+</ion-content>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="format-detection" content="telephone=no"/>
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"/>
+  <link rel="stylesheet" type="text/css" href="css/index.css"/>
+  <meta name="msapplication-tap-highlight" content="no"/>
+  <title>Hello World</title>
+</head>
+<body>
+<div class="app">
+  <img id="image" style="position:absolute; top:10px; left:10px" src="" />
+
+  <h1>Google+ and Firebase</h1>
+
+  <div id="deviceready" class="blink">
+    <p class="event listening">Connecting to Device</p>
+    <p class="event received">Device is Ready</p>
+
+    <p id="feedback">not logged in</p>
+    <div id="show_data">Firebase data<br/>assumes you have a db with<br />songs/ id/ title: xx</div>
+    <button onclick="isAvailable()">Available?</button>
+    <button onclick="add_data()">add</button>
+    <button onclick="remove_data()">del</button>
+    <br/><br/>
+    <button onclick="login()">Login with Google+</button>
+    <br/><br/>
+    <button onclick="trySilentLogin()">Try silent login with Google+</button>
+    <br/><br/>
+    <button onclick="logout()">Logout</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <button onclick="disconnect()">Disconnect</button>
+    <br/><br/>
+    <button onclick="window.plugins.googleplus.getSigningCertificateFingerprint(function(res){alert(res)}, function(res){alert(res)})">get cert fingerprint (Android)</button>
+  </div>
+</div>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script src="js/firebase-3.6.4.js"></script>
+<script type="text/javascript">
+    // NOTE: use your firebase info here
+    var config = {
+        apiKey: "!complete-your-info!",
+        authDomain: "",
+        databaseURL: "",
+        storageBucket: "",
+        messagingSenderId: ""
+    };
+    var songs={};
+
+  app.initialize();
+  firebase.initializeApp(config);
+
+  // fire base login status listener
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+        alert("fire logged! "+user.email);
+        firebase.database().ref().child('songs/').on('value', function(snapshot) {
+            songs=snapshot.val();
+            document.querySelector('#show_data').innerHTML=JSON.stringify(snapshot.val());
+        });
+    } else {
+        alert('fire not logged');
+    }
+  });
+  
+  function add_data(){
+            songs['xxx']={title: 'yay'};
+            var updates = {};
+            updates['songs'] = songs;
+            firebase.database().ref().update(updates);
+  }
+  function remove_data(){
+            var updates = {};
+            delete songs['xxx'];
+            updates['songs'] = songs;
+            firebase.database().ref().update(updates);
+  }
+
+  function login() {
+    window.plugins.googleplus.login(
+        {
+                 'webClientId' : '<!!NOTE-use-your-key-here!!>.apps.googleusercontent.com',
+                 'offline': true
+        },
+        function (obj) {
+            document.querySelector("#image").src = obj.imageUrl;
+            document.querySelector("#image").style.visibility = 'visible';
+            document.querySelector("#feedback").innerHTML = "Hi, " + obj.displayName + ", " + obj.email;
+            if (!firebase.auth().currentUser) {
+                document.querySelector("#feedback").innerHTML ='signing firebase';
+                firebase.auth().signInWithCredential(firebase.auth.GoogleAuthProvider.credential(obj.idToken))
+                .then((success) => {
+                    console.log("success: " + JSON.stringify(success)); // to long json to put it in #feedback
+                })
+                .catch((error) => {
+                        document.querySelector("#feedback").innerHTML = "error0: " + JSON.stringify(error);
+                      });
+            }else{
+                document.querySelector("#feedback").innerHTML ='error1: already sigend in firebase';
+            }
+        },
+        function (msg) {
+          document.querySelector("#feedback").innerHTML = "error2: " + msg;
+        }
+    );
+  }
+
+  function isAvailable() {
+    window.plugins.googleplus.isAvailable(function(avail) {alert(avail)});
+  }
+
+  function trySilentLogin() {
+    window.plugins.googleplus.trySilentLogin(
+        {
+                 'webClientId' : '<!!NOTE-use-your-key-here!!>.apps.googleusercontent.com',
+                 'offline': true
+        },
+        function (obj) {
+          document.querySelector("#image").src = obj.imageUrl;
+          document.querySelector("#image").style.visibility = 'visible';
+          document.querySelector("#feedback").innerHTML = "Silent hi, " + obj.displayName + ", " + obj.email;
+        },
+        function (msg) {
+          document.querySelector("#feedback").innerHTML = "error: " + msg;
+        }
+    );
+  }
+
+  function logout() {
+    window.plugins.googleplus.logout(
+        function (msg) {
+          document.querySelector("#image").style.visibility = 'hidden';
+          document.querySelector("#feedback").innerHTML = msg;
+          if(firebase.auth().currentUser){
+            document.querySelector("#feedback").innerHTML ='signing out from firebase';
+            firebase.auth().signOut();
+          }
+        },
+        function (msg) {
+          document.querySelector("#feedback").innerHTML = msg;
+        }
+    );
+
+  }
+
+  function disconnect() {
+    window.plugins.googleplus.disconnect(
+        function (msg) {
+          document.querySelector("#image").style.visibility = 'hidden';
+          document.querySelector("#feedback").innerHTML = msg;
+          if(firebase.auth().currentUser){
+            document.querySelector("#feedback").innerHTML ='signing out from firebase';
+            firebase.auth().signOut();
+          }
+        },
+        function (msg) {
+          document.querySelector("#feedback").innerHTML = msg;
+        }
+    );
+  }
+
+  window.onerror = function(what, line, file) {
+    alert(what + '; ' + line + '; ' + file);
+  };
+
+  function handleOpenURL (url) {
+    document.querySelector("#feedback").innerHTML = "App was opened by URL: " + url;
+  }
+
+</script>
+</body>
+</html>
