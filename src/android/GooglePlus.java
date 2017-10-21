@@ -63,7 +63,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
     public static final String ARGUMENT_HOSTED_DOMAIN = "hostedDomain";
 
     public static final String TAG = "GooglePlugin";
-    public static final int RC_GOOGLEPLUS = 77552; // Request Code to identify our plugin's activities
+    public static final int RC_GOOGLEPLUS = 1552; // Request Code to identify our plugin's activities
     public static final int KAssumeStaleTokenSec = 60;
 
     // Wraps our service connection to Google Play services and provides access to the users sign in state and Google APIs
@@ -162,7 +162,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
 
             // if webClientId is included AND offline is true, we'll request the serverAuthCode
             if (clientOptions.optBoolean(ARGUMENT_OFFLINE_KEY, false)) {
-                gso.requestServerAuthCode(webClientId, false);
+                gso.requestServerAuthCode(webClientId, true);
             }
         }
 

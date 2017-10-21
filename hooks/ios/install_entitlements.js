@@ -86,9 +86,36 @@ module.exports = function (context) {
 
         // write the updated project file
         fs.writeFileSync(projectPath, pbxProject.writeSync());
-        console.log("END Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
 
-        deferral.resolve();
+        var projDir = path.join(iosFolder, projName);
+
+        fs.readdir(projDir, function (err, items) {
+          if (err) {
+            // Just ignore any errors here.
+
+          } else {
+            // Parse lazily, only if we find an Entitlements-*.plist file
+            // that needs to be modified.
+            var parsedData;
+
+            items.forEach(function (item) {
+              if (/^Entitlements-.*\.plist$/.test(item)) {
+                parsedData = parsedData || plist.parse(data);
+
+                var absItemPath = path.join(projDir, item);
+                var parsedPlist = plist.parse(fs.readFileSync(absItemPath, "utf8"));
+
+                fs.writeFileSync(
+                  absItemPath,
+                  plist.build(Object.assign(parsedPlist, parsedData))
+                );
+              }
+            });
+          }
+
+          console.log("END Running hook to add iOS Keychain Sharing entitlements (required since iOS 10)");
+          deferral.resolve();
+        });
       });
     }
   });
