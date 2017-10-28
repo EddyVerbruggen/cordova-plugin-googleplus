@@ -117,8 +117,11 @@ if (window.location.protocol === "file:") {
                 // Listen for sign-in state changes.
                 gapi.auth2.getAuthInstance().isSignedIn.listen(GooglePlusProxy.updateSigninStatus);
             }, function(error) {
-                console.error("Could not load WEB\_APPLICATION\_CLIENT_ID in your config.xml");               
-                console.error(error);
+                if (error.details) {
+                    console.error(error.details);
+                } else {
+                    console.error(error);
+                }
             });
         });
     };
