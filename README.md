@@ -75,6 +75,10 @@ $ keytool -exportcert -keystore <path-to-debug-or-production-keystore> -list -v 
 ```
 Login on Android will use the accounts signed in on the user's device.
 
+#### Publishing your app in Google Play Store
+
+Google re-signs your app with a different certificate when you publish it in the Play Store. Once your app is published, copy the SHA-1 fingerprint of the "App signing certificate", found in the "App signing" section under "Release Management", in [Google Play Console](https://play.google.com/apps/publish/). Paste this fingerprint in the Release OAuth client ID in [Google Credentials Manager](https://console.developers.google.com/apis/credentials).
+
 ### Web Client Id
 
 If you want to get an `idToken` or `serverAuthCode` back from the Sign In Process, you will need to pass the client ID for your project's web application. This can be found on your project's API credentials page on the [Google Developer's Console](https://console.developers.google.com/).
