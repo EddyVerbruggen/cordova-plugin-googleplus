@@ -252,7 +252,7 @@ As the above articles mention, the `idToken` can be exchanged for user informati
 
 _Note: Google does not want user identity data sent directly to a server. The idToken is their preferred method to send that data securely and safely, as it must be verified through their servers in order to unpack._
 
-This has several uses. On the client-side, it can be a way to get doubly confirm the user identity, or it can be used to get details such as the email host domain. The server-side is where the `idToken` really hits its stride. It is an easy way to confirm the users identity before allowing them access to that servers resources or before exchaning the `serverAuthCode` for an access and refresh token (see the next section).
+This has several uses. On the client-side, it can be a way to get doubly confirm the user identity, or it can be used to get details such as the email host domain. The server-side is where the `idToken` really hits its stride. It is an easy way to confirm the users identity before allowing them access to that servers resources or before exchanging the `serverAuthCode` for an access and refresh token (see the next section).
 
 If your server-side only needs identity, and not additional account access, this is a secure and simple way to supply that information.
 
