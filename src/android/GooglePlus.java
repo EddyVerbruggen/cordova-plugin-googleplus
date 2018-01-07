@@ -161,7 +161,7 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
             gso.requestIdToken(webClientId);
 
             // if webClientId is included AND offline is true, we'll request the serverAuthCode
-            if (clientOptions.optBoolean(ARGUMENT_OFFLINE_KEY, false)) {
+            if (clientOptions.optBoolean(ARGUMENT_OFFLINE_KEY, true)) {
                 gso.requestServerAuthCode(webClientId, true);
             }
         }
