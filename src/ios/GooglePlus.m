@@ -63,9 +63,7 @@ Fixes issue with G+ login window not closing correctly on ios 9
             annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
     } else {
         // Other
-        return [self application:app openURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+        return [self application:app openURL:url options:options[UIApplicationOpenURLOptionsAnnotationKey]];
     }
 }
 @end
@@ -112,7 +110,6 @@ Fixes issue with G+ login window not closing correctly on ios 9
     NSString* serverClientId = options[@"webClientId"];
     NSString *loginHint = options[@"loginHint"];
     BOOL offline = [options[@"offline"] boolValue];
-    NSString* hostedDomain = options[@"hostedDomain"];
 
 
     GIDSignIn *signIn = [GIDSignIn sharedInstance];
@@ -122,10 +119,6 @@ Fixes issue with G+ login window not closing correctly on ios 9
 
     if (serverClientId != nil && offline) {
       signIn.serverClientID = serverClientId;
-    }
-    
-    if (hostedDomain != nil) {
-        signIn.hostedDomain = hostedDomain;
     }
 
     signIn.uiDelegate = self;
@@ -202,9 +195,7 @@ Fixes issue with G+ login window not closing correctly on ios 9
                        @"accessToken"     : accessToken,
                        @"refreshToken"    : refreshToken,
                        @"userId"          : userId,
-                       @"displayName"     : user.profile.name       ? : [NSNull null],
-                       @"givenName"       : user.profile.givenName  ? : [NSNull null],
-                       @"familyName"      : user.profile.familyName ? : [NSNull null],
+                       @"displayName"     : user.profile.name ? : [NSNull null],
                        @"imageUrl"        : imageUrl ? imageUrl.absoluteString : [NSNull null],
                        };
 
