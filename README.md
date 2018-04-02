@@ -111,9 +111,11 @@ $ cordova prepare
 
 IMPORTANT:
 
-* _Please note that `myreversedclientid` and `mywebapplicationclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
+* _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
 
-* _If you are building a hybrid application **(Browser, iOS and Android)**, or an Android application, you have to replace `myreversedclientid` and `mywebapplicationclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes._
+* _If you are building a hybrid application **(iOS and Android)**, or an Android application, you have to replace `myreversedclientid` with the reverse value of Client ID in your **Release** credential generated on step 3, on [Google Developer's Console](https://console.developers.google.com/), this will be: **"com.googleusercontent.apps.`uniqueId`"**, without quotes. Example: '123-abc123.apps.googleusercontent.com' becomes 'com.googleusercontent.apps.123-abc123'._
+
+* `myreversedclientid` is a place holder for Oauth Client ID specifically generated for web application in your [Google Developer's Console](https://console.developers.google.com/).
 
 GooglePlus.js is brought in automatically. There is no need to change or add anything in your html.
 
