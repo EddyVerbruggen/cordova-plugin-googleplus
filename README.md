@@ -80,6 +80,10 @@ $ keytool -exportcert -keystore <path-to-debug-or-production-keystore> -list -v 
 ```
 Login on Android will use the accounts signed in on the user's device.
 
+#### Publishing your app in Google Play Store
+
+Google re-signs your app with a different certificate when you publish it in the Play Store. Once your app is published, copy the SHA-1 fingerprint of the "App signing certificate", found in the "App signing" section under "Release Management", in [Google Play Console](https://play.google.com/apps/publish/). Paste this fingerprint in the Release OAuth client ID in [Google Credentials Manager](https://console.developers.google.com/apis/credentials).
+
 ### Web Client Id
 
 If you want to get an `idToken` or `serverAuthCode` back from the Sign In Process, you will need to pass the client ID for your project's web application. This can be found on your project's API credentials page on the [Google Developer's Console](https://console.developers.google.com/).
@@ -169,7 +173,7 @@ window.plugins.googleplus.login(
     {
       'scopes': '... ', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
       'webClientId': 'client id of the web app/server side', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
-      'offline': true, // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
+      'offline': true // optional, but requires the webClientId - if set to true the plugin will also return a serverAuthCode, which can be used to grant offline access to a non-Google server
     },
     function (obj) {
       alert(JSON.stringify(obj)); // do something useful instead of alerting
@@ -255,7 +259,7 @@ As the above articles mention, the `idToken` can be exchanged for user informati
 
 _Note: Google does not want user identity data sent directly to a server. The idToken is their preferred method to send that data securely and safely, as it must be verified through their servers in order to unpack._
 
-This has several uses. On the client-side, it can be a way to get doubly confirm the user identity, or it can be used to get details such as the email host domain. The server-side is where the `idToken` really hits its stride. It is an easy way to confirm the users identity before allowing them access to that servers resources or before exchaning the `serverAuthCode` for an access and refresh token (see the next section).
+This has several uses. On the client-side, it can be a way to get doubly confirm the user identity, or it can be used to get details such as the email host domain. The server-side is where the `idToken` really hits its stride. It is an easy way to confirm the users identity before allowing them access to that servers resources or before exchanging the `serverAuthCode` for an access and refresh token (see the next section).
 
 If your server-side only needs identity, and not additional account access, this is a secure and simple way to supply that information.
 
