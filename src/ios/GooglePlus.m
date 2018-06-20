@@ -16,10 +16,22 @@
 
 @implementation GooglePlus
 
-}
+- (void)pluginInitialize
+{
+    NSLog(@"GooglePlus pluginInitizalize");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURL:) name:CDVPluginHandleOpenURLNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURLWithAppSourceAndAnnotation:) name:CDVPluginHandleOpenURLWithAppSourceAndAnnotationNotification object:nil];
 
 }
 
+- (void)handleOpenURL:(NSNotification*)notification
+{
+
+    // no need to handle this handler, we dont have an sourceApplication here, which is required by GIDSignIn handleURL
+
+}
+
+- (void)handleOpenURLWithAppSourceAndAnnotation:(NSNotification*)notification
 {
 
     }
