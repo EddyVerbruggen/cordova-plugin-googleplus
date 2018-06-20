@@ -34,6 +34,17 @@
 - (void)handleOpenURLWithAppSourceAndAnnotation:(NSNotification*)notification
 {
 
+    NSMutableDictionary * options = [notification object];
+
+    NSURL* url = options[@"url"];
+
+    NSString* possibleReversedClientId = [url.absoluteString componentsSeparatedByString:@":"].firstObject;
+
+    if ([possibleReversedClientId isEqualToString:self.getreversedClientId] && self.isSigningIn) {
+        self.isSigningIn = NO;
+        [[GIDSignIn sharedInstance] handleURL:url
+                            sourceApplication:options[@"sourceApplication"]
+                            annotation:options[@"annotation"]];
     }
 }
 
