@@ -13,62 +13,17 @@
  @author Sam Muggleworth (PointSource, LLC)
  */
 
-// need to swap out a method, so swizzling it here
-static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector);
-
-@implementation AppDelegate (IdentityUrlHandling)
-
-+ (void)load {
-    swizzleMethod([AppDelegate class],
-                @selector(application:openURL:sourceApplication:annotation:),
-                @selector(identity_application:openURL:sourceApplication:annotation:));
-
-    swizzleMethod([AppDelegate class],
-                @selector(application:openURL:options:),
-                @selector(indentity_application_options:openURL:options:));
-}
-
-/** Google Sign-In SDK
- @date July 19, 2015
- */
-- (BOOL)identity_application: (UIApplication *)application
-                     openURL: (NSURL *)url
-           sourceApplication: (NSString *)sourceApplication
-                  annotation: (id)annotation {
-    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
-
-    if ([gp isSigningIn]) {
-        gp.isSigningIn = NO;
-        return [[GIDSignIn sharedInstance] handleURL:url sourceApplication:sourceApplication annotation:annotation];
-    } else {
-        // call super
-        return [self identity_application:application openURL:url sourceApplication:sourceApplication annotation:annotation];
-    }
-}
-
-/**
-From https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/227#issuecomment-227674026
-Fixes issue with G+ login window not closing correctly on ios 9
-*/
-- (BOOL)indentity_application_options: (UIApplication *)app
-            openURL: (NSURL *)url
-            options: (NSDictionary *)options
-{
-    GooglePlus* gp = (GooglePlus*) [self.viewController pluginObjects][@"GooglePlus"];
-
-    if ([gp isSigningIn]) {
-        gp.isSigningIn = NO;
-        return [[GIDSignIn sharedInstance] handleURL:url
-            sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
-            annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
-    } else {
-        // Other
-        return [self indentity_application_options:app openURL:url options:options];
-    }
-}
-@end
 
 @implementation GooglePlus
+
+}
+
+}
+
+{
+
+    }
+}
 
 // If this returns false, you better not call the login function because of likely app rejection by Apple,
 // see https://code.google.com/p/google-plus-platform/issues/detail?id=900
@@ -226,18 +181,4 @@ Fixes issue with G+ login window not closing correctly on ios 9
     [self.viewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark Swizzling
-
 @end
-
-static void swizzleMethod(Class class, SEL destinationSelector, SEL sourceSelector) {
-  Method destinationMethod = class_getInstanceMethod(class, destinationSelector);
-  Method sourceMethod = class_getInstanceMethod(class, sourceSelector);
-
-  // If the method doesn't exist, add it.  If it does exist, replace it with the given implementation.
-  if (class_addMethod(class, destinationSelector, method_getImplementation(sourceMethod), method_getTypeEncoding(sourceMethod))) {
-    class_replaceMethod(class, destinationSelector, method_getImplementation(destinationMethod), method_getTypeEncoding(destinationMethod));
-  } else {
-    method_exchangeImplementations(destinationMethod, sourceMethod);
-  }
-}
