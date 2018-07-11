@@ -282,6 +282,9 @@ As stated before, this plugin is all about user authentication and identity, so 
 - Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
+- Q: After following the `keytool` steps, I still can't get authentication to work on Android. I'm having a "10 error"!!!
+- A: You need to get the SHA 1 cert from your apk file. Run: `keytool -list -printcert -jarfile <your apk>` and copy the SHA 1 to your Android Client ID on Google Console.
+
 - Q: OMG $@#*! the Android build is failing
 - A: You need to have _Android Support Repository_ and _Android Support Library_ installed in the Android SDK manager. Make sure you're using a fairly up to date version of those.
 
