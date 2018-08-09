@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        id="cordova-plugin-googleplus"
-        version="5.3.0">
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  id="cordova-plugin-googleplus"
+  version="5.3.0">
 
   <name>Google SignIn</name>
 
@@ -29,8 +29,8 @@
   <!-- android -->
   <platform name="android">
 
-    <framework src="com.google.android.gms:play-services-auth:11.8.0" />
-    <framework src="com.google.android.gms:play-services-identity:11.8.0" />
+    <framework src="com.google.android.gms:play-services-auth:+" />
+    <framework src="com.google.android.gms:play-services-identity:+" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="GooglePlus">
@@ -67,14 +67,14 @@
     <config-file target="*-Info.plist" parent="CFBundleURLTypes">
       <array>
         <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>REVERSED_CLIENT_ID</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>$REVERSED_CLIENT_ID</string>
-            </array>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+          <key>CFBundleURLName</key>
+          <string>REVERSED_CLIENT_ID</string>
+          <key>CFBundleURLSchemes</key>
+          <array>
+            <string>$REVERSED_CLIENT_ID</string>
+          </array>
         </dict>
       </array>
     </config-file>
@@ -97,8 +97,8 @@
     <framework src="libz.tbd" weak="true" />
     <framework src="libz.dylib" weak="true" />
 
-		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
-		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
+    <hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
+    <hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
   <!-- browser -->
