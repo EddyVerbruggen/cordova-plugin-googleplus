@@ -1,6 +1,16 @@
 # Google Sign-In Cordova/PhoneGap Plugin
-by [Eddy Verbruggen](http://twitter.com/eddyverbruggen),
-with great assistance from Sam Muggleworth ([PointSource, LLC](https://github.com/PointSource))
+
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![Twitter Follow][twitter-image]][twitter-url]
+
+[build-status]:https://travis-ci.org/EddyVerbruggen/cordova-plugin-googleplus.svg?branch=master
+[build-url]:https://travis-ci.org/EddyVerbruggen/cordova-plugin-googleplus
+[npm-image]:http://img.shields.io/npm/v/cordova-plugin-googleplus.svg
+[npm-url]:https://npmjs.org/package/cordova-plugin-googleplus
+[downloads-image]:http://img.shields.io/npm/dm/cordova-plugin-googleplus.svg
+[twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
+[twitter-url]:https://twitter.com/eddyverbruggen
 
 ## 0. Index
 
