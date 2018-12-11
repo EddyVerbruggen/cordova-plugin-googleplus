@@ -12,6 +12,8 @@
 [twitter-image]:https://img.shields.io/twitter/follow/eddyverbruggen.svg?style=social&label=Follow%20me
 [twitter-url]:https://twitter.com/eddyverbruggen
 
+> ⚠️ From plugin version 6.0.0 the minimum required cordova-ios version is 4.5.0. Need to use a lower cordova-ios version? Use plugin version 5.3.2 or lower.
+
 ## 0. Index
 
 1. [Description](#1-description)
