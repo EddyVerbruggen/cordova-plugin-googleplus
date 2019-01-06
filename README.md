@@ -307,6 +307,93 @@ As stated before, this plugin is all about user authentication and identity, so 
 - Q: Why isn't this working on my Android Emulator???
 - A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
 
+- Q: I'm getting **Error 16**, what do I do?
+- A: This is always a problem because the signature (or fingerprint) of your app when signed is not added to the google console (or firebase) Oauth whitelist. Please double check with steps 1-4 below:
+
+Make sure you fully read and understand the [guide on App Signing from the android documentation](https://developer.android.com/studio/publish/app-signing)
+
+After reading that the steps (1-4) you need to take:
+
+### 1. Make a keystore
+
+Make a local keystore and key with the android studio or via terminal (this can be used as official app signing key, or just as upload key, either is fine)
+
+In the case you only have one official key and do not enroll _Google Play App Signing_ then go to 3A. If you do enroll in _Google Play App Signing_ your local key will be your _upload key_. In this case go to 3B.
+
+### 2A. Without _Google Play App Signing_
+
+You only have 1 local key which is your official app signing key.
+
+You need to whitelist the following key fingerprints (in SHA1 format) in Google Oauth settings:
+
+- android default `debug.keystore` key
+- your own created keystore with its key (for App Signing)
+
+### 2B. With _Google Play App Signing_ enabled
+
+You have local "upload key" and one official "App Signing key" which is stored only on Google servers
+
+You need to whitelist the following key fingerprints (in SHA1 format) in Google Oauth settings:
+
+- android default `debug.keystore` key
+- your own created keystore with its key (for Uploading)
+- google's App Signing key
+
+### 3. Get key fingerprints
+
+Get the above keys' fingerprints (in SHA1 format) to be able to whitelist them.
+
+### A. Debug key
+
+For the android default `debug.keystore` do:
+
+    keytool -exportcert -keystore /Users/myusername/.android/debug.keystore  -list -v
+
+You will see the SHA1 fingerprint for the debug key in terminal. Copy that.
+
+### B. App signing or Upload key
+
+For the own created keystore with key (either for 3A or 3B) do:
+
+    keytool -exportcert -keystore /path/to/your/key/yourKeystoreFile.keystore  -list -v
+
+You will see the SHA1 fingerprint for the debug key in terminal. Copy that.
+
+### C. Google's App signing key
+
+Only when _Google Play App Signing_ is enabled (3B). You can find the key Google will use to sign your builds in the Google Play Console.
+
+_Requirement:_ You need to have finished the basic info on your android app and then you need to upload a signed APK for internal testing. Once this is uploaded you will be able to access the following menu:
+
+Go to Release Management > App sigining. There you will see
+
+- "App signing certificate" and SHA-1 fingerprint
+- "Upload certificate" and SHA-1 fingerprint
+
+The "Upload" one is (and should be) the same as key B. above. And the "App signing certificate" is the key that Google will use. Copy this one.
+
+### 4. Whitelist the key fingerprints
+
+Again we have 2 options to whitelist them. Projects that use only the _Google Cloud Platform_ or projects that use _Firebase_.
+
+### A. Google Cloud Platform projects
+
+(In case you also use Firebase, you can skip this step)
+
+1. Go to [API & Services > credentials](https://console.cloud.google.com/apis/credentials)
+2. Create credentials > OAuth client ID
+3. choose "android" and insert your SHA1
+4. Repeat this for all keys (2 or 3)
+
+### B. Firebase projects
+
+1. Go to the console > Projects settings
+2. Select your Android app at the bottom. (if you don't have any, add an android app, you can ignore the whole tutorial they give you, it's irrelevant for Cordova apps)
+3. Add the finger prints to the "SHA certificate fingerprints" section.
+4. Double check your Google Cloud console: [API & Services > credentials](https://console.cloud.google.com/apis/credentials) and see that Firebase has added these automatically at the bottom under "OAuth 2.0 client IDs"
+
+
+
 ## 10. Changelog
 - 5.3.2: Allow override of Play services version via `PLAY_SERVICES_VERSION`.
 - 5.3.1: Capacitor compatibility.
