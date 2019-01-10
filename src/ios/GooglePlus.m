@@ -2,18 +2,6 @@
 #import "objc/runtime.h"
 #import "GooglePlus.h"
 
-/** Switch to Sign-In SDK.
- @date July 19, 2015
- @author Eddy Verbruggen
- */
-
-/**
-  Updates to be more aligned with updated Android version and with Google.
- @date March 15, 2015
- @author Sam Muggleworth (PointSource, LLC)
- */
-
-
 @implementation GooglePlus
 
 - (void)pluginInitialize
@@ -21,19 +9,15 @@
     NSLog(@"GooglePlus pluginInitizalize");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURL:) name:CDVPluginHandleOpenURLNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleOpenURLWithAppSourceAndAnnotation:) name:CDVPluginHandleOpenURLWithAppSourceAndAnnotationNotification object:nil];
-
 }
 
 - (void)handleOpenURL:(NSNotification*)notification
 {
-
     // no need to handle this handler, we dont have an sourceApplication here, which is required by GIDSignIn handleURL
-
 }
 
 - (void)handleOpenURLWithAppSourceAndAnnotation:(NSNotification*)notification
 {
-
     NSMutableDictionary * options = [notification object];
 
     NSURL* url = options[@"url"];
