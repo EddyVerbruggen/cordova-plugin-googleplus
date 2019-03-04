@@ -20,14 +20,19 @@
 @property(nonatomic, readonly) NSString *userID;
 
 // Representation of the Basic profile data. It is only available if |shouldFetchBasicProfile|
-// is set and either |signInWithUser| or |SignIn| has been completed successfully.
+// is set and either |signIn| or |signInSilently| has been completed successfully.
 @property(nonatomic, readonly) GIDProfileData *profile;
 
 // The authentication object for the user.
 @property(nonatomic, readonly) GIDAuthentication *authentication;
 
-// The API scopes requested by the app in an array of |NSString|s.
-@property(nonatomic, readonly) NSArray *accessibleScopes;
+// The API scopes requested by the app in an array of |NSString|s. Deprecated.
+// Use |grantedScopes| instead.
+@property(nonatomic, readonly) NSArray *accessibleScopes
+    __attribute__((deprecated("Use grantedScopes instead.")));
+
+// The API scopes granted to the app in an array of |NSString|s.
+@property(nonatomic, readonly) NSArray *grantedScopes;
 
 // For Google Apps hosted accounts, the domain of the user.
 @property(nonatomic, readonly) NSString *hostedDomain;
