@@ -7,8 +7,7 @@ var xcode = require('xcode'),
     util = require('util');
 
 module.exports = function (context) {
-  var Q
-
+  var Q;
   try {
     Q = require('q');
   } catch (e) {
