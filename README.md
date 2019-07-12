@@ -290,6 +290,8 @@ Google Documentation for Enabling Server-Side Access
 
 As the above articles mention, the `serverAuthCode` is an item that can be exchanged for an access and refresh token. Unlike the `idToken`, this allows the server-side to have direct access to the users Google account.
 
+Only in the initial login request `serverAuthCode` will be returned. If you wish to receive the token a second time, you can by using logout first.
+
 You have a couple options when it comes to this exchange: you can use the Google REST Apis to get those in the hybrid app itself or you can send the code to your backend server to be exchanged there, using whatever method necessary (Google provides examples for Java, Python, and JS/HTTP).
 
 As stated before, this plugin is all about user authentication and identity, so any use of the user's account beyond that needs to be implemented per use case, per application.
