@@ -21,12 +21,12 @@
 3. [Google API setup](#3-google-api-setup)
 4. [Installation (CLI / Plugman)](#4-installation-phonegap-cli--cordova-cli)
 5. [Installation (PhoneGap Build)](#5-installation-phonegap-build)
-6. [Installation (iOS and Cocoapods)](#5-installation-ios-and-cocoapods)
-7. [Usage](#6-usage)
-8. [Exchanging the `idToken`](#7-exchanging-the-idtoken)
-9. [Exchanging the `serverAuthCode`](#8-exchanging-the-serverauthcode)
-10. [Troubleshooting](#9-troubleshooting)
-11. [Changelog](#10-changelog)
+6. [Installation (iOS and Cocoapods)](#6-installation-ios-and-cocoapods)
+7. [Usage](#7-usage)
+8. [Exchanging the `idToken`](#8-exchanging-the-idtoken)
+9. [Exchanging the `serverAuthCode`](#9-exchanging-the-serverauthcode)
+10. [Troubleshooting](#10-troubleshooting)
+11. [Changelog](#11-changelog)
 
 ## 1. Description
 
