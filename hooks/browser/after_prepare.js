@@ -29,6 +29,6 @@ var files = [
 for(var i=0; i<files.length; i++) {
     try {
         var contents = fs.readFileSync(files[i]).toString();
-        fs.writeFileSync(files[i], contents.replace(/WEB_APPLICATION_CLIENT_ID/g, WEB_APPLICATION_CLIENT_ID));
+        fs.writeFileSync(files[i], contents.replace(/client_id: "[^"]+"/g, `client_id: "${WEB_APPLICATION_CLIENT_ID}"`));
     } catch(err) {}
 }
