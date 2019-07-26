@@ -21,11 +21,12 @@
 3. [Google API setup](#3-google-api-setup)
 4. [Installation (CLI / Plugman)](#4-installation-phonegap-cli--cordova-cli)
 5. [Installation (PhoneGap Build)](#5-installation-phonegap-build)
-6. [Usage](#6-usage)
-7. [Exchanging the `idToken`](#7-exchanging-the-idtoken)
-8. [Exchanging the `serverAuthCode`](#8-exchanging-the-serverauthcode)
-9. [Troubleshooting](#9-troubleshooting)
-10. [Changelog](#10-changelog)
+6. [Installation (iOS and Cocoapods)](#6-installation-ios-and-cocoapods)
+7. [Usage](#7-usage)
+8. [Exchanging the `idToken`](#8-exchanging-the-idtoken)
+9. [Exchanging the `serverAuthCode`](#9-exchanging-the-serverauthcode)
+10. [Troubleshooting](#10-troubleshooting)
+11. [Changelog](#11-changelog)
 
 ## 1. Description
 
@@ -154,7 +155,23 @@ For the latest version from Git (not recommended):
 <plugin>
 ```
 
-## 6. Usage
+## 6. Installation (iOS and Cocoapods)
+
+This plugin use the [CocoaPods dependency manager](https://cocoapods.org) in order to satisfy the iOS Google SignIn SDK library dependencies.
+
+Therefore please make sure you have Cocoapods installed in your iOS build environment - setup instructions can be found [here](https://cocoapods.org/). Also make sure your local Cocoapods repo is up-to-date by running `pod repo update`.
+
+If building your project in Xcode, you need to open `YourProject.xcworkspace` (not `YourProject.xcodeproj`) so both your Cordova app project and the Pods project will be loaded into Xcode.
+
+You can list the pod dependencies in your Cordova iOS project by installing [cocoapods-dependencies](https://github.com/segiddins/cocoapods-dependencies):
+
+```
+sudo gem install cocoapods-dependencies
+cd platforms/ios/
+pod dependencies
+```
+
+## 7. Usage
 Check the [demo app](demo) to get you going quickly, or hurt yourself and follow these steps.
 
 Note that none of these methods should be called before [`deviceready`](https://cordova.apache.org/docs/en/latest/cordova/events/events.deviceready.html) has fired.
@@ -266,7 +283,7 @@ window.plugins.googleplus.disconnect(
 );
 ```
 
-## 7. Exchanging the `idToken`
+## 8. Exchanging the `idToken`
 
 Google Documentation for Authenticating with a Backend Server
 - [Web](https://developers.google.com/identity/sign-in/web/backend-auth)
@@ -281,7 +298,7 @@ This has several uses. On the client-side, it can be a way to get doubly confirm
 
 If your server-side only needs identity, and not additional account access, this is a secure and simple way to supply that information.
 
-## 8. Exchanging the `serverAuthCode`
+## 9. Exchanging the `serverAuthCode`
 
 Google Documentation for Enabling Server-Side Access
 - [Web](https://developers.google.com/identity/protocols/OAuth2WebServer#handlingresponse)
@@ -296,7 +313,7 @@ You have a couple options when it comes to this exchange: you can use the Google
 
 As stated before, this plugin is all about user authentication and identity, so any use of the user's account beyond that needs to be implemented per use case, per application.
 
-## 9. Troubleshooting
+## 10. Troubleshooting
 - Q: I can't get authentication to work on Android. And why is there no ANDROID API KEY?
 - A: On Android you need to execute the `keytool` steps, see the installation instructions for details.
 
@@ -399,7 +416,7 @@ Again we have 2 options to whitelist them. Projects that use only the _Google Cl
 
 
 
-## 10. Changelog
+## 11. Changelog
 - 5.3.2: Allow override of Play services version via `PLAY_SERVICES_VERSION`.
 - 5.3.1: Capacitor compatibility.
 - 5.3.0: Browser platform added.
