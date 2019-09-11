@@ -25,6 +25,9 @@
     "android",
     "ios"
   ],
+  "dependencies": [
+    "q"
+  ],
   "engines": [
     {
       "name": "cordova",
