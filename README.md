@@ -326,7 +326,7 @@ As stated before, this plugin is all about user authentication and identity, so 
 - Q: Why isn't this working on my Android Emulator???
 - A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
 
-- Q: I'm getting **Error 1**, what do I do?
+- Q: I'm getting **Error 10**, what do I do?
 - A: This is likely caused by cordova not using the keystore you want to use (e.g. because you generated your own). Please check https://cordova.apache.org/docs/en/latest/guide/platforms/android/#signing-an-app to read how to do this. Some have reported that you need to run `cordova clean` before running the build to resolve error 10.
 
 - Q: I'm getting **Error 16**, what do I do?
