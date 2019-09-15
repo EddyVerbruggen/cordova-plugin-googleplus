@@ -81,7 +81,7 @@ The `REVERSED_CLIENT_ID` is also known as the "iOS URL Scheme" on the Developer'
 Login on iOS takes the user to a [SafariViewController](https://developer.apple.com/library/ios/documentation/SafariServices/Reference/SFSafariViewController_Ref/) through the Google SDK, instead of the separate Safari browser.
 
 ### Android
-To configure Android, [generate a configuration file here](https://developers.google.com/mobile/add?platform=android&cntapi=signin). Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console. There is no need to add the generated google-services.json file into your cordova project.
+To configure Android, [generate a configuration file here](https://developers.google.com/mobile/add?platform=android&cntapi=signin). Enable Google Sign-In and add an Android App to add the SHA1 fingerprint. Once Google Sign-In is enabled Google will automatically create necessary credentials in Developer Console for web and Android. There is no need to add the generated google-services.json file into your cordova project. You may need to configure the consent screen.
 
 Make sure you execute the `keytool` steps as explained [here](https://developers.google.com/drive/android/auth) or authentication will fail (do this for both release and debug keystores).
 
@@ -325,6 +325,9 @@ As stated before, this plugin is all about user authentication and identity, so 
 
 - Q: Why isn't this working on my Android Emulator???
 - A: Make sure you are using a Virtual Device running with a **Google APIs target and/or a Google APIs CPU**!
+
+- Q: I'm getting **Error 1**, what do I do?
+- A: This is likely caused by cordova not using the keystore you want to use (e.g. because you generated your own). Please check https://cordova.apache.org/docs/en/latest/guide/platforms/android/#signing-an-app to read how to do this. Some have reported that you need to run `cordova clean` before running the build to resolve error 10.
 
 - Q: I'm getting **Error 16**, what do I do?
 - A: This is always a problem because the signature (or fingerprint) of your android app when signed is not added to the google console (or firebase) OAuth whitelist. Please double check if you did everything required for this. See the mini-guide below.
