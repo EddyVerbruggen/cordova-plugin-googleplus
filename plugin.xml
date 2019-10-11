@@ -81,6 +81,17 @@
       </array>
     </config-file>
 
+    <config-file parent="keychain-access-groups" target="*/Entitlements-Debug.plist">
+      <array>
+        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+      </array>
+    </config-file>
+    <config-file parent="keychain-access-groups" target="*/Entitlements-Release.plist">
+      <array>
+        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+      </array>
+    </config-file>
+
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
     <framework src="CoreText.framework" weak="true" />
@@ -102,7 +113,6 @@
     </podspec>
 
 		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
-		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
   <!-- browser -->
