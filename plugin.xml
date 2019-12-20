@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="8.2.1">
+        version="8.1.2">
 
   <name>Google SignIn</name>
 
@@ -81,17 +81,6 @@
       </array>
     </config-file>
 
-    <config-file parent="keychain-access-groups" target="*/Entitlements-Debug.plist">
-      <array>
-        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-      </array>
-    </config-file>
-    <config-file parent="keychain-access-groups" target="*/Entitlements-Release.plist">
-      <array>
-        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-      </array>
-    </config-file>
-
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
     <framework src="CoreText.framework" weak="true" />
@@ -102,7 +91,9 @@
     <framework src="libz.dylib" weak="true" />
 
     <!-- Google frameworks -->
-    <podspec>
+	<!-- <podspec> causes "pod install" to run during build-ios, and the build fails on multiple/contradictory pod versions
+	     cordova-plugin-googleplus should be *after* cordova-plugin-firebasex in config.xml and *before* cordova-plugin-facebook4 -->
+    <!--<podspec>
       <config>
         <source url="https://github.com/CocoaPods/Specs.git"/>
       </config>
@@ -110,9 +101,10 @@
         <pod name="GoogleSignIn" spec="~> 4.4.0"/>
         <pod name="GoogleUtilities" spec="~> 6.3.0"/>
       </pods>
-    </podspec>
+    </podspec>-->
 
 		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
+		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
   <!-- browser -->
