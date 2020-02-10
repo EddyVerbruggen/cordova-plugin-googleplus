@@ -26,9 +26,7 @@
 
     if ([possibleReversedClientId isEqualToString:self.getreversedClientId] && self.isSigningIn) {
         self.isSigningIn = NO;
-        [[GIDSignIn sharedInstance] handleURL:url
-                            sourceApplication:options[@"sourceApplication"]
-                            annotation:options[@"annotation"]];
+        [[GIDSignIn sharedInstance] handleURL:url];
     }
 }
 
@@ -48,7 +46,7 @@
  @date July 19, 2015
  */
 - (void) trySilentLogin:(CDVInvokedUrlCommand*)command {
-    [[self getGIDSignInObject:command] signInSilently];
+    [[self getGIDSignInObject:command] restorePreviousSignIn];
 }
 
 /** Get Google Sign-In object
@@ -88,7 +86,7 @@
         signIn.hostedDomain = hostedDomain;
     }
 
-    signIn.uiDelegate = self;
+    signIn.presentingViewController = self.viewController;
     signIn.delegate = self;
 
     // default scopes are email and profile
