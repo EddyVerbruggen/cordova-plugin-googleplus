@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="8.2.1">
+        version="8.5.0">
 
   <name>Google SignIn</name>
 
@@ -104,11 +104,11 @@
     <!-- Google frameworks -->
     <podspec>
       <config>
-        <source url="https://github.com/CocoaPods/Specs.git"/>
+        <source url="https://cdn.cocoapods.org/"/>
       </config>
       <pods use-frameworks="true">
-        <pod name="GoogleSignIn" spec="~> 4.4.0"/>
-        <pod name="GoogleUtilities" spec="~> 6.3.0"/>
+        <pod name="GoogleSignIn" spec="~> 5.0.2"/>
+        <pod name="GoogleUtilities" spec="~> 6.6"/>
       </pods>
     </podspec>
 

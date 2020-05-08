@@ -416,24 +416,3 @@ Again we have 2 options to whitelist them. Projects that use only the _Google Cl
 2. Select your Android app at the bottom. (if you don't have any, add an android app, you can ignore the whole tutorial they give you, it's irrelevant for Cordova apps)
 3. Add the finger prints to the "SHA certificate fingerprints" section.
 4. Double check your Google Cloud console: [API & Services > credentials](https://console.cloud.google.com/apis/credentials) and see that Firebase has added these automatically at the bottom under "OAuth 2.0 client IDs"
-
-
-
-## 11. Changelog
-- 5.3.2: Allow override of Play services version via `PLAY_SERVICES_VERSION`.
-- 5.3.1: Capacitor compatibility.
-- 5.3.0: Browser platform added.
-- 5.0.3: Added the convenience method `getSigningCertificateFingerprint` to retrieve the Android cert fingerprint which is required in the Google Developer Console.
-- 5.0.2: Require linking against `SafariServices` and `CoreText` frameworks on iOS as per Google's recommendation. Added `loginHint` on iOS.
-- 5.0.0: Android GoogleSignIn SDK (See #193), iOS SDK 4.0.0, iOS compatibility with Facebook authentication plugins, added `familyName` and `givenName`.
-- 4.0.8: Fix for Android 6 where it would crash while asking for permission. Thx #166!
-- 4.0.7: Re-added a missing framework for iOS. Thx #168!
-- 4.0.6: Updated iOS GoogleSignIn SDK to 2.4.0. Thx #153!
-- 4.0.5: Fixed a broken import on iOS.
-- 4.0.4: Using framework tags again for Android
-- 4.0.3: On iOS `isAvailable` always returns try since that should be fine with the new Google Sign-In framework. Re-added imageUrl to the result of Sign-In on iOS.
-- 4.0.1: Login on Android would crash the app if `isAvailable` was invoked beforehand.
-- 4.0.0: Removed the need for `iosApiKey`, reverted Android to Google playservices framework for wider compatibility, documented scopes feature a bit.
-- 3.0.0: Using Google Sign-In for iOS, instead of Google+.
-- 1.1.0: Added `isAvailable`, for issue [#37](https://github.com/EddyVerbruggen/cordova-plugin-googleplus/issues/37)
-- 1.0.0: Initial version supporting iOS and Android.
