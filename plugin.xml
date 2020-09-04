@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="7.0.0">
+        version="8.5.0">
 
   <name>Google SignIn</name>
 
@@ -29,9 +29,7 @@
 
   <!-- android -->
   <platform name="android">
-
-
-	<preference name="PLAY_SERVICES_VERSION" default="11.8.0"/>
+    <preference name="PLAY_SERVICES_VERSION" default="15.0.1"/>
     <framework src="com.google.android.gms:play-services-auth:$PLAY_SERVICES_VERSION" />
     <framework src="com.google.android.gms:play-services-identity:$PLAY_SERVICES_VERSION" />
 
@@ -82,14 +80,16 @@
       </array>
     </config-file>
 
-    <!-- Google frameworks -->
-    <!-- Downloaded here: https://developers.google.com/identity/sign-in/ios/sdk/ (changelog: https://developers.google.com/identity/sign-in/ios/release) -->
-    <framework src="src/ios/libs/GoogleAppUtilities.framework" custom="true" />
-    <framework src="src/ios/libs/GoogleAuthUtilities.framework" custom="true" />
-    <framework src="src/ios/libs/GoogleNetworkingUtilities.framework" custom="true" />
-    <framework src="src/ios/libs/GoogleSignIn.framework" custom="true" />
-    <framework src="src/ios/libs/GoogleSymbolUtilities.framework" custom="true" />
-    <framework src="src/ios/libs/GoogleUtilities.framework" custom="true" />
+    <config-file parent="keychain-access-groups" target="*/Entitlements-Debug.plist">
+      <array>
+        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+      </array>
+    </config-file>
+    <config-file parent="keychain-access-groups" target="*/Entitlements-Release.plist">
+      <array>
+        <string>$(AppIdentifierPrefix)$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+      </array>
+    </config-file>
 
     <!-- System frameworks -->
     <framework src="AddressBook.framework" weak="true" />
@@ -100,8 +100,18 @@
     <framework src="libz.tbd" weak="true" />
     <framework src="libz.dylib" weak="true" />
 
+    <!-- Google frameworks -->
+    <podspec>
+      <config>
+        <source url="https://cdn.cocoapods.org/"/>
+      </config>
+      <pods use-frameworks="true">
+        <pod name="GoogleSignIn" spec="~> 5.0.2"/>
+        <pod name="GoogleUtilities" spec="~> 6.7"/>
+      </pods>
+    </podspec>
+
 		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
-		<hook type="after_plugin_install" src="hooks/ios/install_entitlements.js" />
   </platform>
 
   <!-- browser -->
