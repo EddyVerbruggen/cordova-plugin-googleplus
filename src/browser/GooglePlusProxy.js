@@ -45,21 +45,21 @@ var GooglePlusProxy = {
         }
     },
 
-    trySilentLogin: function (success, error, options) {
+    trySilentLogin: function (success, error, [options]) {
         if (!__googleSdkReady) {
             return __googleCallbacks.push(function() {
-                this.trySilentLogin(success, error, options);
+                this.trySilentLogin(success, error, [options]);
             });
         }
 
         GooglePlusProxy.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get(), success, error);
     },
 
-    login: function (success, error, options) {
+    login: function (success, error, [options]) {
         var that = this;
         if (!__googleSdkReady) {
             return __googleCallbacks.push(function() {
-                that.login(success, error, options);
+                that.login(success, error, [options]);
             });
         }
 
