@@ -95,7 +95,7 @@ Login on Android will use the accounts signed in on the user's device.
 
 #### Integrating Google Play Services
 
-To set up Google Play Services version, you can use PLAY_SERVICES_VERSION parameter (with 11.8.0 value by default). It is useful in order to avoid conflicts with another plugins which use any other different version of Google Play Service, because they MUST be the same version.
+To set up Google Play Services versions, you can use PLAY_SERVICES_AUTH_VERSION and PLAY_SERVICES_IDENTITY_VERSION parameters (with 15.0.1 value by default). It is useful in order to avoid conflicts with another plugin which use any other different version of Google Play Service, because they MUST be the same version.
 
 #### Publishing your app in Google Play Store
 
