@@ -52,6 +52,7 @@
 
   <!-- ios -->
   <platform name="ios">
+	<preference name="IOS_GOOGLEUTILITIES_VERSION" default="~> 6.32.2"/>
 
     <config-file target="config.xml" parent="/*">
       <feature name="GooglePlus">
@@ -108,7 +109,7 @@
       </config>
       <pods use-frameworks="true">
         <pod name="GoogleSignIn" spec="~> 5.0.2"/>
-        <pod name="GoogleUtilities" spec="~> 7.2.2"/>
+        <pod name="GoogleUtilities" spec="$IOS_GOOGLEUTILITIES_VERSION"/>
       </pods>
     </podspec>
 
