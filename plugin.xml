@@ -30,7 +30,7 @@
   <!-- android -->
   <platform name="android">
 
-	<preference name="PLAY_SERVICES_VERSION" default="15.0.1"/>
+    <preference name="PLAY_SERVICES_VERSION" default="15.0.1"/>
     <framework src="com.google.android.gms:play-services-auth:$PLAY_SERVICES_VERSION" />
     <framework src="com.google.android.gms:play-services-identity:$PLAY_SERVICES_VERSION" />
 
@@ -102,17 +102,19 @@
     <framework src="libz.dylib" weak="true" />
 
     <!-- Google frameworks -->
+    <preference name="GOOGLE_SIGN_IN_VERSION" default="~> 5.0.2"/>
+    <preference name="GOOGLE_UTILITIES_VERSION" default="~> 7.2.2"/>
     <podspec>
       <config>
         <source url="https://cdn.cocoapods.org/"/>
       </config>
       <pods use-frameworks="true">
-        <pod name="GoogleSignIn" spec="~> 5.0.2"/>
-        <pod name="GoogleUtilities" spec="~> 7.2.2"/>
+        <pod name="GoogleSignIn" spec="$GOOGLE_SIGN_IN_VERSION"/>
+        <pod name="GoogleUtilities" spec="$GOOGLE_UTILITIES_VERSION"/>
       </pods>
     </podspec>
 
-		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
+    <hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
   </platform>
 
   <!-- browser -->
