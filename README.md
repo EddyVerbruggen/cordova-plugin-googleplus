@@ -126,6 +126,20 @@ $ cordova plugin add https://github.com/EddyVerbruggen/cordova-plugin-googleplus
 $ cordova prepare
 ```
 
+EXTRA VARIABLES:
+
+If you need to install a specific version of `GoogleSignIn` library using pod you can pass it as a variable.
+This is optional, if this variable is not set the default version will be used.
+```
+--variable GOOGLE_SIGN_IN_VERSION="~> 5.0.0"
+```
+
+If you need to install a specific version of `GoogleUtilities` library using pod you can pass it as a variable.
+This is optional, if this variable is not set the default version will be used.
+```
+--variable GoogleUtilities="~> 6.7.0"
+```
+
 IMPORTANT:
 
 * _Please note that `myreversedclientid` is a place holder for the reversed clientId you find in your iOS configuration file. Do not surround this value with quotes. **(iOS only Applications)**_
