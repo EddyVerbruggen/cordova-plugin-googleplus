@@ -101,7 +101,13 @@ public class GooglePlus extends CordovaPlugin implements GoogleApiClient.OnConne
 
         } else if (ACTION_LOGOUT.equals(action)) {
             Log.i(TAG, "Trying to logout!");
-            signOut();
+            new AsyncTask<String, String, String>() {
+                @Override
+                protected String doInBackground(String... params) {
+                    signOut();
+                    return null;
+                }
+            }.execute();
 
         } else if (ACTION_DISCONNECT.equals(action)) {
             Log.i(TAG, "Trying to disconnect the user");
