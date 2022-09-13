@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="cordova-plugin-googleplus"
-        version="8.5.2">
+        version="9.0.0">
 
   <name>Google SignIn</name>
 
@@ -30,9 +30,10 @@
   <!-- android -->
   <platform name="android">
 
-	<preference name="PLAY_SERVICES_VERSION" default="15.0.1"/>
-    <framework src="com.google.android.gms:play-services-auth:$PLAY_SERVICES_VERSION" />
-    <framework src="com.google.android.gms:play-services-identity:$PLAY_SERVICES_VERSION" />
+    <preference name="PLAY_SERVICES_AUTH_VERSION" default="20.3.0"/>
+    <preference name="PLAY_SERVICES_IDENTITY_VERSION" default="18.0.1"/>
+    <framework src="com.google.android.gms:play-services-auth:$PLAY_SERVICES_AUTH_VERSION" />
+    <framework src="com.google.android.gms:play-services-identity:$PLAY_SERVICES_IDENTITY_VERSION" />
 
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="GooglePlus">
@@ -102,17 +103,19 @@
     <framework src="libz.dylib" weak="true" />
 
     <!-- Google frameworks -->
+    <preference name="GOOGLE_SIGN_IN_VERSION" default="~> 6.2.3"/>
+    <preference name="GOOGLE_UTILITIES_VERSION" default="~> 7.4"/>
     <podspec>
       <config>
         <source url="https://cdn.cocoapods.org/"/>
       </config>
       <pods use-frameworks="true">
-        <pod name="GoogleSignIn" spec="~> 5.0.2"/>
-        <pod name="GoogleUtilities" spec="~> 7.2.2"/>
+        <pod name="GoogleSignIn" spec="$GOOGLE_SIGN_IN_VERSION"/>
+        <pod name="GoogleUtilities" spec="$GOOGLE_UTILITIES_VERSION"/>
       </pods>
     </podspec>
 
-		<hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
+    <hook type="after_plugin_install" src="hooks/ios/prerequisites.js"/>
   </platform>
 
   <!-- browser -->
